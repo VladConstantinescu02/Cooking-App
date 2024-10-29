@@ -9,5 +9,5 @@ public class IngredientMapperProfile : Profile
     public IngredientMapperProfile()
     {
         CreateMap<Ingredient, IngredientDto>();
-    }   
+    }
 }

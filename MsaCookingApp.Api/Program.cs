@@ -1,8 +1,19 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 using MsaCookingApp.Business;
 using MsaCookingApp.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel((serverOptions) =>
+{
+    serverOptions.ListenAnyIP(5000);
+    serverOptions.ListenAnyIP(5001, (options =>
+    {
+        options.UseHttps();
+    }));
+});
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
