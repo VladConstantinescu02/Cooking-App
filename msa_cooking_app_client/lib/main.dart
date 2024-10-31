@@ -6,7 +6,7 @@ void main() {
   runApp(
     const ProviderScope(
         child: MyApp()
-    )
+    ),
   );
 }
 
@@ -26,19 +26,65 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  MyHomePageState createState() => MyHomePageState();
+}
 
+class MyHomePageState extends State<MyHomePage> {
+    int currentStateIndex = 0;
+
+    void onItemTapped(int index) {
+      setState(() {
+        currentStateIndex = index;
+      });
+    }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        title: const Text('Dummy text here'),
       ),
-      body: const Center(
-          child: IngredientsListScreen()
-      )
+      body: Center(
+        child: IndexedStack(
+          index: currentStateIndex,
+          children: const [
+            Placeholder(), // To be home screen
+            IngredientsListScreen(), // Fridge
+            Placeholder(), //  Meals
+            Placeholder() // Profile
+          ],
+        ),
+      ),
+      bottomNavigationBar:  BottomNavigationBar(
+        currentIndex: currentStateIndex,
+        onTap: onItemTapped,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood_rounded),
+            label: 'Fridge'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.set_meal),
+            label: 'Meals'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_rounded),
+            label: 'Profile'
+          )
+        ],
+      ),
     );
   }
 }
+
