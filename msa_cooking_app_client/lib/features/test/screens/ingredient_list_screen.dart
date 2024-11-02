@@ -32,7 +32,7 @@ class IngredientsListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()), // Show loading indicator
-        error: (error, stack) => Center(child: Text('Error: $error')), // Handle error case
+        error: (error, stack) => Center(child: Text('Erro: $error')), // Handle error case
       ),
     );
   }
