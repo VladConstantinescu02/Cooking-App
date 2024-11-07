@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
+using MsaCookingApp.Api;
 using MsaCookingApp.Business;
 using MsaCookingApp.DataAccess;
 
@@ -33,6 +33,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddBusinessLogic();
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddGlobalErrorHandling();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen((c) =>
 {
@@ -54,6 +55,7 @@ if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Brackets.Play.API v1"));
 }
 
+app.UseGlobalErrorHandling();
 app.MapControllers();
 app.UseHttpsRedirection();
 
