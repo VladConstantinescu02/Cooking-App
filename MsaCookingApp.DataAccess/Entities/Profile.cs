@@ -9,6 +9,8 @@ public class Profile
     public Guid Id { get; set; }
     [Required]
     public required string UserName { get; set; }
+    [Required]
+    public required string FullName { get; set; }
     public string? ProfilePhotoUrl { get; set; }
     [Required]
     public Guid UserId { get; set; }

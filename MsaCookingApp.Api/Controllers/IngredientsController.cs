@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MsaCookingApp.Contracts.Features.Test.Abstractions.Services;
 
 namespace MsaCookingApp.Api.Controllers;
 
+[Authorize]
 [Route("/api/ingredients")]
 public class IngredientsController : Controller
 {

@@ -8,7 +8,6 @@ namespace MsaCookingApp.Api.Controllers;
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorsController : Controller
 {
-    [HttpGet]
     public IActionResult Index()
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
