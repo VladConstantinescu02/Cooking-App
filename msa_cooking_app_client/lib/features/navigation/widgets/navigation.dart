@@ -10,6 +10,7 @@ class Navigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Colors.grey[50],
       currentIndex: navigationShell.currentIndex,
       onTap: _onItemTapped,
       selectedItemColor: Colors.black,
