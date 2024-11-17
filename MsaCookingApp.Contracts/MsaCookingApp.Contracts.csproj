@@ -10,4 +10,8 @@
       <Folder Include="Features\Test\Abstractions\Repositories\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    </ItemGroup>
+
 </Project>

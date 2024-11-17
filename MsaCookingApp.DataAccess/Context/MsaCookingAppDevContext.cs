@@ -23,6 +23,7 @@ public class MsaCookingAppDevContext : DbContext
     public MsaCookingAppDevContext(DbContextOptions<MsaCookingAppDevContext> options)
     : base(options)
     {
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
