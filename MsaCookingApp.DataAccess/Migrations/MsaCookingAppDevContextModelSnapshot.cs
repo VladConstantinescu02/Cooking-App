@@ -15,7 +15,7 @@ namespace MsaCookingApp.DataAccess.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0-rc.2.24474.1");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("ChallengeProfile", b =>
                 {
@@ -300,10 +300,16 @@ namespace MsaCookingApp.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DietaryOptionId")
+                    b.Property<int?>("DietaryOptionId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ProfilePhotoUrl")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -311,6 +317,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -328,11 +335,11 @@ namespace MsaCookingApp.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -529,9 +536,7 @@ namespace MsaCookingApp.DataAccess.Migrations
                 {
                     b.HasOne("MsaCookingApp.DataAccess.Entities.DietaryOption", "DietaryOption")
                         .WithMany()
-                        .HasForeignKey("DietaryOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DietaryOptionId");
 
                     b.HasOne("MsaCookingApp.DataAccess.Entities.User", "User")
                         .WithMany()

@@ -8,4 +8,12 @@ public class DietaryOption
     public int Id { get; set; }
     [Required]
     public required string Name { get; set; }
+
+    public static DietaryOption Create(string name)
+    {
+        return new DietaryOption()
+        {
+            Name = name
+        };
+    }
 }

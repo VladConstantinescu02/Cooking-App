@@ -5,6 +5,7 @@ namespace MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 public interface IRepository<TEntity>
 {
     Task AddAsync(TEntity item, bool applyChanges = true);
+    Task<TEntity?> AddAndReturnEntityAsync(TEntity item);
     Task UpdateAsync<TId>(TEntity updatedItem, TId id, bool applyChanges = true);
     Task RemoveAsync(TEntity item, bool applyChanges = true);
     Task RemoveRangeAsync(IEnumerable<TEntity> items, bool applyChanges = true);

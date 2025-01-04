@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.DataAccess.Context;
+using MsaCookingApp.DataAccess.Entities;
+using MsaCookingApp.DataAccess.Exceptions;
 
 namespace MsaCookingApp.DataAccess.Repositories;
 
@@ -33,6 +35,21 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
                 throw;
             }
 
+        }
+
+        public async Task<TEntity?> AddAndReturnEntityAsync(TEntity item)
+        {
+            try
+            {
+                var entityEntry = await Context.Set<TEntity>().AddAsync(item);
+                await SaveChangesAsync();
+                return entityEntry.Entity;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                throw;
+            }
         }
 
         public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
