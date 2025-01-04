@@ -5,6 +5,7 @@ using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.DataAccess.Context;
 using MsaCookingApp.DataAccess.Entities;
 using MsaCookingApp.DataAccess.Repositories;
+using MsaCookingApp.DataAccess.Repositories.Abstractions;
 
 namespace MsaCookingApp.DataAccess;
 
@@ -18,6 +19,9 @@ public static class DependencyInjection
         });
 
         services.AddTransient<IRepository<Ingredient>, Repository<Ingredient>>();
+        services.AddTransient<IRepository<Profile>, ProfileRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IRepository<DietaryOption>, Repository<DietaryOption>>();
         return services;
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MsaCookingApp.Api;
+using MsaCookingApp.Api.Filters;
 using MsaCookingApp.Business;
 using MsaCookingApp.Business.Shared.Settings;
 using MsaCookingApp.DataAccess;
@@ -47,6 +48,7 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:Secret") ?? ""))
         };
+        
     });
 builder.Services.AddControllers();
 builder.Services.AddBusinessLogic();
@@ -84,6 +86,13 @@ builder.Services.AddSwaggerGen((c) =>
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<ApiClientsOptions>(builder.Configuration.GetSection("ApiClients"));
+builder.Services.Configure<SpoonacularOptions>(builder.Configuration.GetSection("Spoonacular"));
+
+builder.Services.AddHttpClient(builder.Configuration["ApiClients:Spoonacular:Name"] ?? "", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiClients:Spoonacular:BaseAddress"] ?? "");
+});
 
 var app = builder.Build();
 app.UseCors(allowedSpecificOrigin);

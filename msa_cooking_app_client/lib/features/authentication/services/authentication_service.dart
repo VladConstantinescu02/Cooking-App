@@ -24,11 +24,10 @@ class AuthenticationService {
         return Failure(Exception("Could not retrieve id token"));
       }
       final apiJwtTokenResult = await _authenticationApiClient.getAuthenticationToken(GetAuthTokenRequest(idToken, accessToken));
-      if (apiJwtTokenResult is Success<String?, Exception>) {
-        return Success(AuthenticateUserResult(apiJwtTokenResult.value, googleAccount));
-      } else {
-        return Failure(Exception("Problem when retrieving token"));
-      }
+      return switch(apiJwtTokenResult) {
+        Success<String?, Exception>() => Success(AuthenticateUserResult(apiJwtTokenResult.value, googleAccount)),
+        Failure<String?, Exception>() => Failure(Exception(apiJwtTokenResult.exception.toString()))
+      };
     } on Exception catch (e) {
       log("Error authenticating user: $e");
       return Failure(Exception("Unexpected behavior"));
