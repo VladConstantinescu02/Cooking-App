@@ -17,13 +17,14 @@ public class ProfilesService : IProfilesService
 {
     private readonly IRepository<DataAccess.Entities.Profile> _profileRepository;
     private readonly IRepository<Ingredient> _ingredientRepository;
+    private readonly IRepository<DataAccess.Entities.Fridge> _fridgeRepository;
     private readonly IUserRepository _userRepository;
     private readonly IRepository<DietaryOption> _dietaryOptionRepository;
     private readonly ILogger _logger;
     private readonly ISpoonacularApiService _spoonacularApiService;
     private readonly IMapper _mapper;
 
-    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, ILogger<ProfilesService> logger, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper)
+    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, ILogger<ProfilesService> logger, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper, IRepository<DataAccess.Entities.Fridge> fridgeRepository)
     {
         _profileRepository = profileRepository;
         _logger = logger;
@@ -32,6 +33,7 @@ public class ProfilesService : IProfilesService
         _spoonacularApiService = spoonacularApiService;
         _dietaryOptionRepository = dietaryOptionRepository;
         _mapper = mapper;
+        _fridgeRepository = fridgeRepository;
     }
 
     public async Task<GetProfileResponseDto> GetProfileAsync(string? userEmail)
@@ -107,6 +109,11 @@ public class ProfilesService : IProfilesService
             }
 
             await _profileRepository.AddAsync(newProfile);
+
+            var profileFridgeName = $"{newProfile.UserName}'s Fridge";
+            var profileFridge = DataAccess.Entities.Fridge.Create(profileFridgeName, newProfile.Id);
+            await _fridgeRepository.AddAsync(profileFridge);
+            
             return CreateProfileResponseDto.Create("Successfully created profile");
         }
         catch (Exception e)

@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddTransient<IRepository<Profile>, ProfileRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IRepository<DietaryOption>, Repository<DietaryOption>>();
+        services.AddTransient<IRepository<Fridge>, Repository<Fridge>>();
         return services;
     }
 }
