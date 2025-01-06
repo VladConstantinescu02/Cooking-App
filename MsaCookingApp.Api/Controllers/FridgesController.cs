@@ -23,6 +23,12 @@ public class FridgesController : Controller
         var email = AuthorizationHelper.GetUserEmailFromClaims(User);
         return Ok(await _fridgesService.GetFridgeAsync(email));
     }
+    
+    [HttpGet("ingredients/measuring-units")]
+    public async Task<IActionResult> GetIngredientMeasuringUnitsAsync()
+    {
+        return Ok(await _fridgesService.GetIngredientMeasuringUnitsAsync());
+    }
 
     [HttpPost("ingredient")]
     public async Task<IActionResult> AddFridgeIngredientAsync([FromBody] AddFridgeIngredientDto addFridgeIngredientDto)

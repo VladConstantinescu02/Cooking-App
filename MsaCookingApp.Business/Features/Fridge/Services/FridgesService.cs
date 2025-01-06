@@ -123,7 +123,9 @@ public class FridgesService : IFridgesService
                     $"Ingredient not found");
             }
 
-            var foundIngredientMeasuringUnit = await _ingredientMeasuringUnitRepository.GetByIdAsync(updateFridgeIngredientDto.IngredientMeasuringUnitId);
+            var foundIngredientMeasuringUnit =
+                await _ingredientMeasuringUnitRepository.GetByIdAsync(updateFridgeIngredientDto
+                    .IngredientMeasuringUnitId);
             if (foundIngredientMeasuringUnit == null)
             {
                 throw new ServiceException(StatusCodes.Status404NotFound, "Ingredient measuring unit not found");
@@ -132,7 +134,8 @@ public class FridgesService : IFridgesService
             foundFridgeIngredient.Quantity = updateFridgeIngredientDto.IngredientQuantity;
             foundFridgeIngredient.IngredientMeasuringUnitId = updateFridgeIngredientDto.IngredientMeasuringUnitId;
 
-            await _fridgeIngredientRepository.UpdateCompositeKeyAsync(foundFridgeIngredient, foundFridgeIngredient.FridgeId, foundFridgeIngredient.IngredientId);
+            await _fridgeIngredientRepository.UpdateCompositeKeyAsync(foundFridgeIngredient,
+                foundFridgeIngredient.FridgeId, foundFridgeIngredient.IngredientId);
 
             return UpdateFridgeIngredientResultDto.Create($"Succesffully updated ingredient");
         }, "Error when adding new ingredient to fridge");
@@ -214,5 +217,19 @@ public class FridgesService : IFridgesService
 
             return GetFridgeResultDto.Create($"Successfully retrieved fridge {foundFridge.Name}", fridge, warnings);
         }, "Error when retrieving fridge");
+    }
+
+    public async Task<GetIngredientMeasuringUnitsResultDto> GetIngredientMeasuringUnitsAsync()
+    {
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
+        {
+            var ingredientMeasuringUnits = 
+                (await _ingredientMeasuringUnitRepository.GetAllAsync())
+                .Select(mu => _mapper.Map<GetIngredientMeasuringUnitDto>(mu))
+                .ToList();
+
+            return GetIngredientMeasuringUnitsResultDto.Create("Successfully retrieved ingredient measuring units",
+                ingredientMeasuringUnits);
+        }, "Error when retrieving ingredient measuring units");
     }
 }

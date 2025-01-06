@@ -8,4 +8,5 @@ public interface IFridgesService
     Task<UpdateFridgeIngredientResultDto> UpdateFridgeIngredientAsync(UpdateFridgeIngredientDto addFridgeIngredientDto, string? userEmail);
     Task<DeleteFridgeIngredientResultDto> DeleteFridgeIngredientAsync(string fridgeIngredientId, string? userEmail);
     Task<GetFridgeResultDto> GetFridgeAsync(string? userEmail);
+    Task<GetIngredientMeasuringUnitsResultDto> GetIngredientMeasuringUnitsAsync();
 }
