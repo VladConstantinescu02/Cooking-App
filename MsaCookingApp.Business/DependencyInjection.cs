@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddTransient<IProfilesService, ProfilesService>();
         services.AddTransient<ISpoonacularApiService, SpoonacularApiService>();
         services.AddTransient<IFridgesService, FridgesService>();
+        services.AddTransient<IExceptionHandlingService, ExceptionHandlingService>();
         return services;
     }
 }

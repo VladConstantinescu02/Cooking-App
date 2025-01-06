@@ -2,16 +2,13 @@
 using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Business.Shared.Settings;
 using MsaCookingApp.Contracts.Features.Authentication.Abstractions;
 using MsaCookingApp.Contracts.Features.Authentication.DTOs;
+using MsaCookingApp.Contracts.Shared.Abstractions.Services;
 using MsaCookingApp.DataAccess.Entities;
-using MsaCookingApp.DataAccess.Exceptions;
 using MsaCookingApp.DataAccess.Repositories.Abstractions;
 
 namespace MsaCookingApp.Business.Features.Authentication.Services;
@@ -19,19 +16,19 @@ namespace MsaCookingApp.Business.Features.Authentication.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly JwtOptions _jwtOptions;
-    private readonly ILogger _logger;
     private readonly IUserRepository _userRepository;
+    private readonly IExceptionHandlingService _exceptionHandlingService;
 
-    public AuthenticationService(IOptions<JwtOptions> jwtOptions, ILogger<AuthenticationService> logger, IUserRepository userRepository)
+    public AuthenticationService(IOptions<JwtOptions> jwtOptions, IUserRepository userRepository, IExceptionHandlingService exceptionHandlingService)
     {
-        _logger = logger;
         _userRepository = userRepository;
+        _exceptionHandlingService = exceptionHandlingService;
         _jwtOptions = jwtOptions.Value;
     }
 
     public async Task<string> AuthenticateWithGoogleAsync(GoogleAuthRequestDto googleAuthRequestDto)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var payload = await GoogleJsonWebSignature.ValidateAsync(googleAuthRequestDto.IdToken);
             var claims = new[]
@@ -59,16 +56,6 @@ public class AuthenticationService : IAuthenticationService
             await _userRepository.UpsertUserAsync(User.Create(payload.Name, payload.Email));
 
             return jwtToken;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when authenticating with google {e}");
-            if (e is DataAccessException)
-            {
-                throw new ServiceException(StatusCodes.Status500InternalServerError,
-                    $"Data access error in upsert user {e}");
-            }
-            throw;
-        }
+        }, "Error when authenticating with google");
     }
 }

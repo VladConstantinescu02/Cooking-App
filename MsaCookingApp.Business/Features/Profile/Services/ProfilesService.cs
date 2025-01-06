@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Contracts.Features.Profile.Abstractions.Services;
 using MsaCookingApp.Contracts.Features.Profile.DTOs;
@@ -9,7 +8,6 @@ using MsaCookingApp.Contracts.Shared.Abstractions.Services;
 using MsaCookingApp.Contracts.Shared.DTOs;
 using MsaCookingApp.DataAccess.Entities;
 using MsaCookingApp.DataAccess.Repositories.Abstractions;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace MsaCookingApp.Business.Features.Profile.Services;
 
@@ -20,25 +18,25 @@ public class ProfilesService : IProfilesService
     private readonly IRepository<DataAccess.Entities.Fridge> _fridgeRepository;
     private readonly IUserRepository _userRepository;
     private readonly IRepository<DietaryOption> _dietaryOptionRepository;
-    private readonly ILogger _logger;
     private readonly ISpoonacularApiService _spoonacularApiService;
     private readonly IMapper _mapper;
+    private readonly IExceptionHandlingService _exceptionHandlingService;
 
-    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, ILogger<ProfilesService> logger, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper, IRepository<DataAccess.Entities.Fridge> fridgeRepository)
+    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper, IRepository<DataAccess.Entities.Fridge> fridgeRepository, IExceptionHandlingService exceptionHandlingService)
     {
         _profileRepository = profileRepository;
-        _logger = logger;
         _userRepository = userRepository;
         _ingredientRepository = ingredientRepository;
         _spoonacularApiService = spoonacularApiService;
         _dietaryOptionRepository = dietaryOptionRepository;
         _mapper = mapper;
         _fridgeRepository = fridgeRepository;
+        _exceptionHandlingService = exceptionHandlingService;
     }
 
     public async Task<GetProfileResponseDto> GetProfileAsync(string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -59,17 +57,12 @@ public class ProfilesService : IProfilesService
                 foundProfile.UserId, foundProfile.ProfilePhotoUrl, profileAlergens, profileDietaryRestriction);
 
             return GetProfileResponseDto.Create("Successfully retrieved profile", profile);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when retrieving profile {e}");
-            throw;
-        }
+        }, "Error when retrieving profile");
     }
 
     public async Task<CreateProfileResponseDto> CreateProfileAsync(CreateProfileDto createProfileDto, string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -115,17 +108,12 @@ public class ProfilesService : IProfilesService
             await _fridgeRepository.AddAsync(profileFridge);
             
             return CreateProfileResponseDto.Create("Successfully created profile");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when creating profile {e}");
-            throw;
-        }
+        }, "Error when creating profile");
     }
 
     public async Task<UpdateProfileResponseDto> UpdateProfileAsync(UpdateProfileDto updateProfileDto, string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -168,17 +156,12 @@ public class ProfilesService : IProfilesService
             }
             await _profileRepository.UpdateAsync(foundProfile, foundProfile.Id);
             return UpdateProfileResponseDto.Create("Successfully updated profile");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when updating profile {e}");
-            throw;
-        }
+        }, "Error when updating profile");
     }
 
     public async Task<DeleteProfileResponseDto> DeleteProfileAsync(string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -199,17 +182,12 @@ public class ProfilesService : IProfilesService
 
             await _profileRepository.RemoveAsync(foundProfile);
             return DeleteProfileResponseDto.Create("Successfully deleted profile");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when deleting profile {e}");
-            throw;
-        }
+        }, "Error when deleting profile");
     }
 
     public async Task<SearchDietaryOptionsResultDto> SearchDietaryOptionAsync(string query)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var formattedQuery = query.ToLower().Trim();
             var dietaryOptions = await _dietaryOptionRepository.GetAllAsync();
@@ -219,12 +197,7 @@ public class ProfilesService : IProfilesService
 
             return SearchDietaryOptionsResultDto.Create("Successfully retrieved search results",
                 filteredDietaryOptions);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when searching dietary option {e}");
-            throw;
-        }
+        }, "Error when searching dietary option");
     }
 
     private async Task SaveIngredientsAsync(IEnumerable<string> ingredientIds, DataAccess.Entities.Profile profile)
