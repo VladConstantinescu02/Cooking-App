@@ -222,7 +222,7 @@ public class ProfilesService : IProfilesService
         }
         catch (Exception e)
         {
-            _logger.LogError($"Error when deleting profile {e}");
+            _logger.LogError($"Error when searching dietary option {e}");
             throw;
         }
     }

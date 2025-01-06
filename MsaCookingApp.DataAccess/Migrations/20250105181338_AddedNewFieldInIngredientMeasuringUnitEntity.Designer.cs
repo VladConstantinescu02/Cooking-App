@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MsaCookingApp.DataAccess.Context;
 
@@ -10,9 +11,11 @@ using MsaCookingApp.DataAccess.Context;
 namespace MsaCookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(MsaCookingAppDevContext))]
-    partial class MsaCookingAppDevContextModelSnapshot : ModelSnapshot
+    [Migration("20250105181338_AddedNewFieldInIngredientMeasuringUnitEntity")]
+    partial class AddedNewFieldInIngredientMeasuringUnitEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -194,8 +197,10 @@ namespace MsaCookingApp.DataAccess.Migrations
                     b.Property<Guid>("FridgeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("IngredientId")
-                        .HasMaxLength(250)
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IngredientId1")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("IngredientMeasuringUnitId")
@@ -206,7 +211,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.HasKey("FridgeId", "IngredientId");
 
-                    b.HasIndex("IngredientId");
+                    b.HasIndex("IngredientId1");
 
                     b.HasIndex("IngredientMeasuringUnitId");
 
@@ -259,8 +264,8 @@ namespace MsaCookingApp.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MealCuisineId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("MealCuisineId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MealTypeId")
                         .HasColumnType("INTEGER");
@@ -302,9 +307,9 @@ namespace MsaCookingApp.DataAccess.Migrations
 
             modelBuilder.Entity("MsaCookingApp.DataAccess.Entities.MealCuisine", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cuisine")
                         .IsRequired()
@@ -536,9 +541,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.HasOne("MsaCookingApp.DataAccess.Entities.Ingredient", "Ingredient")
                         .WithMany()
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IngredientId1");
 
                     b.HasOne("MsaCookingApp.DataAccess.Entities.IngredientMeasuringUnit", "IngredientMeasuringUnit")
                         .WithMany()

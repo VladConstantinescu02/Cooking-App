@@ -125,6 +125,34 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
             }
         }
 
+        public virtual async Task UpdateCompositeKeyAsync<TId1, TId2>(TEntity updatedItem, TId1? id1, TId2 id2, bool applyChanges = true)
+        {
+            try
+            {
+                var existingItem = await Context.Set<TEntity>()
+                    .FindAsync(id1, id2);
+
+                if (existingItem != null)
+                {
+                    Context.Entry(existingItem).CurrentValues.SetValues(updatedItem);
+
+                    if (applyChanges)
+                    {
+                        await SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    Logger.LogWarning($"Entity with composite key ({id1}, {id2}) not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                throw;
+            }
+        }
+
         public virtual async Task RemoveAsync(TEntity item, bool applyChanges = true)
         {
             try

@@ -19,6 +19,7 @@ public class MsaCookingAppDevContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<WeeklyRanking> WeeklyRankings { get; set; }
     public DbSet<WeeklyRankingProfileRank> WeeklyRankingProfileRanks { get; set; }
+    public DbSet<IngredientMeasuringUnit> IngredientMeasuringUnits { get; set; }
 
     public MsaCookingAppDevContext(DbContextOptions<MsaCookingAppDevContext> options)
     : base(options)
@@ -33,13 +34,28 @@ public class MsaCookingAppDevContext : DbContext
             .WithMany((p) => p.ChallengeSubmissionsVoted);
 
         modelBuilder.Entity<ChallengeSubmission>()
-            .HasOne<Profile>((cs) => cs.Profile);
-        
+            .HasOne<Profile>((cs) => cs.Profile)
+            .WithMany()
+            .HasForeignKey(cs => cs.ParticipantProfileId);
+
         modelBuilder.Entity<FridgeIngredient>()
             .HasKey(fi => new { fi.FridgeId, fi.IngredientId });
+
+        modelBuilder.Entity<FridgeIngredient>()
+            .HasOne<IngredientMeasuringUnit>(fi => fi.IngredientMeasuringUnit)
+            .WithMany()
+            .HasForeignKey(fi => fi.IngredientMeasuringUnitId);
         
         modelBuilder.Entity<WeeklyRankingProfileRank>()
             .HasKey(wrpr => new { wrpr.WeeklyRankingId, wrpr.ProfileId });
+
+        modelBuilder.Entity<Meal>()
+            .HasOne<MealType>()
+            .WithMany()
+            .HasForeignKey(m => m.MealTypeId);
+
+        modelBuilder.Entity<MealType>()
+            .HasKey(mt => mt.Id);
         
         base.OnModelCreating(modelBuilder);
     }

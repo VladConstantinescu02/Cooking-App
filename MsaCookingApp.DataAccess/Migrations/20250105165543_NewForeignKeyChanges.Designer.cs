@@ -11,8 +11,8 @@ using MsaCookingApp.DataAccess.Context;
 namespace MsaCookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(MsaCookingAppDevContext))]
-    [Migration("20250104202920_AddedIngredientUnitEntity")]
-    partial class AddedIngredientUnitEntity
+    [Migration("20250105165543_NewForeignKeyChanges")]
+    partial class NewForeignKeyChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,10 +93,12 @@ namespace MsaCookingApp.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhotoUrl")
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Prompt")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -114,6 +116,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -132,6 +135,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ParticipantProfileId")
@@ -139,16 +143,14 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("PhotoUrl")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProfileId")
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChallengeId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ParticipantProfileId");
 
                     b.ToTable("ChallengeSubmissions");
                 });
@@ -161,6 +163,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -176,6 +179,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProfileId")
@@ -217,6 +221,7 @@ namespace MsaCookingApp.DataAccess.Migrations
             modelBuilder.Entity("MsaCookingApp.DataAccess.Entities.Ingredient", b =>
                 {
                     b.Property<string>("Id")
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("CaloriesPer100Grams")
@@ -224,6 +229,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -239,11 +245,12 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("UnitName")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IngredientMeasuringUnit");
+                    b.ToTable("IngredientMeasuringUnits");
                 });
 
             modelBuilder.Entity("MsaCookingApp.DataAccess.Entities.Meal", b =>
@@ -255,14 +262,15 @@ namespace MsaCookingApp.DataAccess.Migrations
                     b.Property<Guid>("MealCuisineId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MealTypeId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MealTypeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MealTypeId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProfileId")
@@ -270,6 +278,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("RecipeDescription")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("TotalCalories")
@@ -281,6 +290,8 @@ namespace MsaCookingApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MealCuisineId");
+
+                    b.HasIndex("MealTypeId");
 
                     b.HasIndex("MealTypeId1");
 
@@ -297,6 +308,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Cuisine")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -312,6 +324,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -362,10 +375,12 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -491,7 +506,7 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.HasOne("MsaCookingApp.DataAccess.Entities.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("ParticipantProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -541,6 +556,12 @@ namespace MsaCookingApp.DataAccess.Migrations
                     b.HasOne("MsaCookingApp.DataAccess.Entities.MealCuisine", "MealCuisine")
                         .WithMany()
                         .HasForeignKey("MealCuisineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MsaCookingApp.DataAccess.Entities.MealType", null)
+                        .WithMany()
+                        .HasForeignKey("MealTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

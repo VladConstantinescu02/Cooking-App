@@ -18,10 +18,12 @@ public class Profile
     public Guid UserId { get; set; }
     public int? DietaryOptionId { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual User User { get; set; } = null!;
     public virtual DietaryOption? DietaryOption { get; set; }
-    public virtual ICollection<Challenge> Challenges { get; set; }
-    public virtual ICollection<ChallengeSubmission> ChallengeSubmissionsVoted { get; set; }
+    public virtual ICollection<Challenge> Challenges { get; set; } = new List<Challenge>();
+
+    public virtual ICollection<ChallengeSubmission> ChallengeSubmissionsVoted { get; set; } =
+        new List<ChallengeSubmission>();
     public virtual ICollection<Ingredient> IngredientAllergies { get; set; } = new List<Ingredient>();
 
     public static Profile Create(string userName, string fullName, Guid userId)

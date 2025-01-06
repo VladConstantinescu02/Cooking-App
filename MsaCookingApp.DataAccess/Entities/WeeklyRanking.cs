@@ -11,5 +11,5 @@ public class WeeklyRanking
     [Required]
     public required Guid ChallengeId { get; set; }
 
-    public virtual required Challenge Challenge { get; set; }
+    public virtual Challenge Challenge { get; set; } = null!;
 }

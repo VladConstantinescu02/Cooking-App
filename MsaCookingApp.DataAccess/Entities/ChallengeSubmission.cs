@@ -11,11 +11,13 @@ public class ChallengeSubmission
     [Required]
     public required Guid ParticipantProfileId { get; set; }
     [Required]
+    [MaxLength(250)]
     public required string PhotoUrl { get; set; }
     [Required]
+    [MaxLength(250)]
     public required string Description { get; set; }
 
-    public virtual required Challenge Challenge { get; set; }
-    public virtual required Profile Profile { get; set; }
-    public virtual required ICollection<Profile> ProfilesThatVoted { get; set; }
+    public virtual Challenge Challenge { get; set; } = null!;
+    public virtual Profile Profile { get; set; } = null!;
+    public virtual ICollection<Profile> ProfilesThatVoted { get; set; } = new List<Profile>();
 }

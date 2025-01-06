@@ -13,7 +13,6 @@ namespace MsaCookingApp.Api.Controllers;
 public class ProfilesController : Controller
 {
     private readonly IProfilesService _profilesService;
-
     public ProfilesController(IProfilesService profilesService)
     {
         _profilesService = profilesService;
