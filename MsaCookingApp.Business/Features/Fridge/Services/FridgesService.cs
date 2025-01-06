@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Contracts.Features.Fridge.Abstractions.Services;
 using MsaCookingApp.Contracts.Features.Fridge.DTOs;
@@ -14,7 +13,6 @@ namespace MsaCookingApp.Business.Features.Fridge.Services;
 
 public class FridgesService : IFridgesService
 {
-    private readonly ILogger<FridgesService> _logger;
     private readonly IRepository<DataAccess.Entities.Profile> _profileRepository;
     private readonly IUserRepository _userRepository;
     private readonly IRepository<DataAccess.Entities.Fridge> _fridgeRepository;
@@ -23,10 +21,10 @@ public class FridgesService : IFridgesService
     private readonly ISpoonacularApiService _spoonacularApiService;
     private readonly IRepository<Ingredient> _ingredientsRepository;
     private readonly IMapper _mapper;
+    private readonly IExceptionHandlingService _exceptionHandlingService;
 
-    public FridgesService(ILogger<FridgesService> logger, IRepository<DataAccess.Entities.Profile> profileRepository, IUserRepository userRepository, IRepository<DataAccess.Entities.Fridge> fridgeRepository, IRepository<FridgeIngredient> fridgeIngredientRepository, IRepository<IngredientMeasuringUnit> ingredientMeasuringUnitRepository, ISpoonacularApiService spoonacularApiService, IRepository<Ingredient> ingredientsRepository, IMapper mapper)
+    public FridgesService(IRepository<DataAccess.Entities.Profile> profileRepository, IUserRepository userRepository, IRepository<DataAccess.Entities.Fridge> fridgeRepository, IRepository<FridgeIngredient> fridgeIngredientRepository, IRepository<IngredientMeasuringUnit> ingredientMeasuringUnitRepository, ISpoonacularApiService spoonacularApiService, IRepository<Ingredient> ingredientsRepository, IMapper mapper, IExceptionHandlingService exceptionHandlingService)
     {
-        _logger = logger;
         _profileRepository = profileRepository;
         _userRepository = userRepository;
         _fridgeRepository = fridgeRepository;
@@ -35,11 +33,12 @@ public class FridgesService : IFridgesService
         _spoonacularApiService = spoonacularApiService;
         _ingredientsRepository = ingredientsRepository;
         _mapper = mapper;
+        _exceptionHandlingService = exceptionHandlingService;
     }
 
     public async Task<AddFridgeIngredientResultDto> AddFridgeIngredientAsync(AddFridgeIngredientDto addFridgeIngredientDto, string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -91,17 +90,12 @@ public class FridgesService : IFridgesService
             await _fridgeIngredientRepository.AddAsync(newFridgeIngredient);
 
             return AddFridgeIngredientResultDto.Create($"Succesffully added new ingredient to {foundFridge.Name}");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when radding new ingredient to fridge {e}");
-            throw;
-        }
+        }, "Error when radding new ingredient to fridge");
     }
 
     public async Task<UpdateFridgeIngredientResultDto> UpdateFridgeIngredientAsync(UpdateFridgeIngredientDto updateFridgeIngredientDto, string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -141,17 +135,12 @@ public class FridgesService : IFridgesService
             await _fridgeIngredientRepository.UpdateCompositeKeyAsync(foundFridgeIngredient, foundFridgeIngredient.FridgeId, foundFridgeIngredient.IngredientId);
 
             return UpdateFridgeIngredientResultDto.Create($"Succesffully updated ingredient");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when adding new ingredient to fridge {e}");
-            throw;
-        }
+        }, "Error when adding new ingredient to fridge");
     }
 
     public async Task<DeleteFridgeIngredientResultDto> DeleteFridgeIngredientAsync(string fridgeIngredientId, string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -182,17 +171,12 @@ public class FridgesService : IFridgesService
             await _fridgeIngredientRepository.RemoveAsync(foundFridgeIngredient);
 
             return DeleteFridgeIngredientResultDto.Create($"Succesffully deleted fridge ingredient");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when deleting fridge ingredient {e}");
-            throw;
-        }
+        }, "Error when deleting fridge ingredient");
     }
 
     public async Task<GetFridgeResultDto> GetFridgeAsync(string? userEmail)
     {
-        try
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
         {
             var foundUser = (await _userRepository.FindAsync((u) => u.Email == userEmail)).FirstOrDefault();
             if (foundUser == null)
@@ -229,11 +213,6 @@ public class FridgesService : IFridgesService
                 : new List<WarningDto>(); 
 
             return GetFridgeResultDto.Create($"Successfully retrieved fridge {foundFridge.Name}", fridge, warnings);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Error when retrieving fridge {e}");
-            throw;
-        }
+        }, "Error when retrieving fridge");
     }
 }
