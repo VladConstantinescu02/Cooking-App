@@ -11,6 +11,6 @@ public class WeeklyRankingProfileRank
     [Required]
     public required int Rank { get; set; }
 
-    public virtual required WeeklyRanking WeeklyRanking { get; set; }
-    public virtual required Profile Profile { get; set; }
+    public virtual WeeklyRanking WeeklyRanking { get; set; } = null!;
+    public virtual Profile Profile { get; set; } = null!;
 }

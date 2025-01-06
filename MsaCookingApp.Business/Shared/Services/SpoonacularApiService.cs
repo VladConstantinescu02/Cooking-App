@@ -59,7 +59,7 @@ public class SpoonacularApiService : ISpoonacularApiService
         var spoonacularApiClient = _httpClientFactory.CreateClient(spoonacularApiClientName);
         var spoonacularApiKey = _spoonacularOptions.ApiKey ?? "";
         
-        var url = $"food/ingredients/search?apiKey={spoonacularApiKey}&query={query}";
+        var url = $"food/ingredients/search?apiKey={spoonacularApiKey}&query={query}&addChildren=true";
         
         var response = await spoonacularApiClient.GetAsync(url);
         
