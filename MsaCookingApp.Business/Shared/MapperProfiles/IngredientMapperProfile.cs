@@ -12,6 +12,7 @@ public class IngredientMapperProfile : Profile
     {
         CreateMap<Ingredient, IngredientDto>();
         CreateMap<Ingredient, ProfileAlergenDto>();
+        CreateMap<IngredientMeasuringUnit, GetIngredientMeasuringUnitDto>();
         CreateMap<FridgeIngredient, GetFridgeIngredientDto>()
             .ForMember(dest => dest.IngredientId, opt => opt.MapFrom(src => src.IngredientId))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Ingredient.Name))
