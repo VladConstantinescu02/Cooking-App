@@ -49,7 +49,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                     path: '/fridge',
                     name: 'Fridge',
-                    builder: (context, state) => const FridgeScreen()
+                    builder: (context, state) => FridgeScreen()
                 )
               ]),
               StatefulShellBranch(routes: [
