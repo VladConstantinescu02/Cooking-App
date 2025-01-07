@@ -19,7 +19,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: '/auth',
+      initialLocation: '/home',
       routes: <RouteBase> [
         GoRoute(
             path: '/auth',
@@ -62,27 +62,27 @@ final routerProvider = Provider<GoRouter>((ref) {
             ]
         )
       ],
-    redirect: (context, state) {
-      final accountState = account;
-
-      if (accountState is AsyncLoading) {
-        return null;
-      }
-
-      if (accountState is AsyncError) {
-        return '/error';
-      }
-
-      var isAuthenticated = accountState.value?.isAuthenticated;
-      if (isAuthenticated == null) {
-        return null;
-      }
-
-      if (state.uri.toString() == '/auth') {
-        return isAuthenticated ? '/home' : null;
-      }
-
-      return isAuthenticated ? null : '/auth';
-    },
+    // redirect: (context, state) {
+    //   final accountState = account;
+    //
+    //   if (accountState is AsyncLoading) {
+    //     return null;
+    //   }
+    //
+    //   if (accountState is AsyncError) {
+    //     return '/error';
+    //   }
+    //
+    //   var isAuthenticated = accountState.value?.isAuthenticated;
+    //   if (isAuthenticated == null) {
+    //     return null;
+    //   }
+    //
+    //   if (state.uri.toString() == '/auth') {
+    //     return isAuthenticated ? '/home' : null;
+    //   }
+    //
+    //   return isAuthenticated ? null : '/auth';
+    // },
   );
 });
