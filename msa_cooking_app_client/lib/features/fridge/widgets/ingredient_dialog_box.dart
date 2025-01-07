@@ -1,26 +1,53 @@
 import 'package:flutter/material.dart';
 
-class IngredientDialogBox extends StatelessWidget{
+import 'button.dart';
+
+class IngredientDialogBox extends StatelessWidget {
+  final controllerName;
+  final controllerAmount;
+  final VoidCallback onSave;
+  final VoidCallback onCancel;
+
+  IngredientDialogBox({
+    super.key,
+    required this.controllerName,
+    required this.controllerAmount,
+    required this.onCancel,
+    required this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return AlertDialog(
       backgroundColor: Colors.white,
       content: Container(
-        height: 300,
-        child: const Column(
+        height: 350,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
-              decoration: InputDecoration(
+              controller: controllerName,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), hintText: "Add new ingredient"),
+            ),
+            TextField(
+              controller: controllerAmount,
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                hintText: "Add new ingredient"
-              ),
+                  hintText: "Add calories amount"),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                //save
+                MyButton(contentText: 'Save', onPressed: onSave),
+                //cancel
+                MyButton(contentText: 'Cancel', onPressed: onCancel)
+              ],
             )
           ],
         ),
       ),
     );
   }
-
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FridgeTile extends StatelessWidget {
-  final String ingredientID; // Not displayed, but kept for potential backend use
+  final String ingredientID;
   final String ingredientName;
   final double ingredientCalories;
   final double ingredientQty;
@@ -29,11 +29,9 @@ class FridgeTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row for ingredient name and calories
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Ingredient name
                 Text(
                   ingredientName,
                   style: const TextStyle(
@@ -42,7 +40,6 @@ class FridgeTile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Ingredient calories
                 Text(
                   '${ingredientCalories.toStringAsFixed(0)} kcal',
                   style: const TextStyle(
@@ -52,8 +49,7 @@ class FridgeTile extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8), // Space between rows
-            // Quantity information below the ingredient name
+            const SizedBox(height: 8),
             Text(
               '${ingredientQty.toStringAsFixed(1)} $ingredientQtySuffix',
               style: const TextStyle(
