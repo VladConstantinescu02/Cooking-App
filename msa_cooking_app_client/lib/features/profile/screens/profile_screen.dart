@@ -12,45 +12,68 @@ class ProfileScreen extends ConsumerWidget {
     return Center(
       child: userAccountAsync.when(
         data: (userAccount) {
-          // Display user details when data is available
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Profile Screen",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              const Icon(
-                Icons.account_circle_rounded,
-                size: 100,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Name: ${userAccount.displayName}",
-                style: const TextStyle(fontSize: 18),
-              ),
-              Text(
-                "Email: ${userAccount.email}",
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(authenticationProvider.notifier).signOut();
-                },
-                child: const Text("Sign Out"),
-              ),
-            ],
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Profile Screen",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const Icon(
+                  Icons.account_circle_rounded,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    "Name: ${userAccount.displayName}",
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    "Email: ${userAccount.email}",
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(authenticationProvider.notifier).signOut();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black87,
+                      elevation: 0
+                  ),
+                  child: const Text(
+                    "Sign Out",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           );
         },
         loading: () {
-          // Display a loading indicator while fetching data
+
           return const CircularProgressIndicator();
         },
         error: (error, stackTrace) {
-          // Display an error message if something goes wrong
+
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -68,7 +91,7 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.refresh(authenticationProvider); // Retry fetching data
+                  ref.refresh(authenticationProvider);
                 },
                 child: const Text("Retry"),
               ),
