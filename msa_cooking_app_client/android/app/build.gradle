@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.msa_cooking_app_client"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
