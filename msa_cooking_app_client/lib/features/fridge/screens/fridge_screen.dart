@@ -9,32 +9,47 @@ class FridgeScreen extends StatefulWidget {
   State<FridgeScreen> createState() => _FridgeScreenState();
 }
 
-
 class _FridgeScreenState extends State<FridgeScreen> {
   final _controllerName = TextEditingController();
+  final _controllerCalorie = TextEditingController();
   final _controllerAmount = TextEditingController();
+
+  // Default selected type
+  String selectedType = 'g';
 
   List foodList = [
     ["1a", "Fish", 200.0, 100.0, 'g'],
     ["1b", "Veggie", 300.0, 50.0, 'g'],
   ];
 
-  void saveNewIngredient() {
 
+  void saveNewIngredient(BuildContext context, String selectedType) {
     setState(() {
       foodList.add([
         "id_${foodList.length + 1}",
         _controllerName.text,
+        double.tryParse(_controllerCalorie.text) ?? 0.0,
         double.tryParse(_controllerAmount.text) ?? 0.0,
-        0.0,
-        0.0,
-        "g"
+        selectedType,
       ]);
       _controllerName.clear();
+      _controllerCalorie.clear();
       _controllerAmount.clear();
     });
     Navigator.of(context).pop();
   }
+
+
+  void cancelNewIngredient(BuildContext context) {
+    setState(() {
+      _controllerName.clear();
+      _controllerCalorie.clear();
+      _controllerAmount.clear();
+      selectedType = 'g';
+    });
+    Navigator.of(context).pop();
+  }
+
 
   void addIngredient(BuildContext context) {
     showDialog(
@@ -42,12 +57,24 @@ class _FridgeScreenState extends State<FridgeScreen> {
       builder: (context) {
         return IngredientDialogBox(
           controllerName: _controllerName,
+          controllerCalorie: _controllerCalorie,
           controllerAmount: _controllerAmount,
-          onSave: saveNewIngredient,
-          onCancel: () => Navigator.of(context).pop(),
+          onSave: (String selectedType) {
+            saveNewIngredient(context, selectedType);
+          },
+          onCancel: () {
+            cancelNewIngredient(context);
+          },
         );
       },
     );
+  }
+
+  // Function to delete an ingredient
+  void deleteIngredient(int ingredientIndex) {
+    setState(() {
+      foodList.removeAt(ingredientIndex);
+    });
   }
 
   @override
@@ -60,7 +87,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          addIngredient(context);
+          addIngredient(context); // Add ingredient button
         },
         backgroundColor: Colors.black87,
         elevation: 0,
@@ -77,11 +104,13 @@ class _FridgeScreenState extends State<FridgeScreen> {
         itemCount: foodList.length,
         itemBuilder: (context, index) {
           return FridgeTile(
-              ingredientID: foodList[index][0],
-              ingredientName: foodList[index][1],
-              ingredientCalories: foodList[index][2],
-              ingredientQty: foodList[index][3],
-              ingredientQtySuffix: foodList[index][4]);
+            ingredientID: foodList[index][0],
+            ingredientName: foodList[index][1],
+            ingredientCalories: foodList[index][2],
+            ingredientQty: foodList[index][3],
+            ingredientQtySuffix: foodList[index][4],
+            deleteFridgeTile: (context) => deleteIngredient(index),
+          );
         },
       ),
     );
