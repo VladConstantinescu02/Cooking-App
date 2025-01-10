@@ -49,13 +49,11 @@ public class MsaCookingAppDevContext : DbContext
         modelBuilder.Entity<WeeklyRankingProfileRank>()
             .HasKey(wrpr => new { wrpr.WeeklyRankingId, wrpr.ProfileId });
 
-        modelBuilder.Entity<Meal>()
-            .HasOne<MealType>()
-            .WithMany()
-            .HasForeignKey(m => m.MealTypeId);
-
         modelBuilder.Entity<MealType>()
             .HasKey(mt => mt.Id);
+
+        modelBuilder.Entity<Meal>()
+            .HasKey(m => m.Id);
         
         base.OnModelCreating(modelBuilder);
     }

@@ -25,6 +25,9 @@ public static class DependencyInjection
         services.AddTransient<IRepository<Fridge>, Repository<Fridge>>();
         services.AddTransient<IRepository<FridgeIngredient>, FridgeIngredientRepository>();
         services.AddTransient<IRepository<IngredientMeasuringUnit>, Repository<IngredientMeasuringUnit>>();
+        services.AddTransient<IRepository<MealCuisine>, Repository<MealCuisine>>();
+        services.AddTransient<IRepository<MealType>, Repository<MealType>>();
+        services.AddTransient<IRepository<Meal>, Repository<Meal>>();
         return services;
     }
 }

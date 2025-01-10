@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MsaCookingApp.DataAccess.Context;
 
@@ -10,9 +11,11 @@ using MsaCookingApp.DataAccess.Context;
 namespace MsaCookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(MsaCookingAppDevContext))]
-    partial class MsaCookingAppDevContextModelSnapshot : ModelSnapshot
+    [Migration("20250108215016_ChangedMealEntity")]
+    partial class ChangedMealEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -52,7 +55,7 @@ namespace MsaCookingApp.DataAccess.Migrations
                     b.Property<string>("IngredientsId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MealsId")
+                    b.Property<string>("MealsId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("IngredientsId", "MealsId");
@@ -255,15 +258,11 @@ namespace MsaCookingApp.DataAccess.Migrations
 
             modelBuilder.Entity("MsaCookingApp.DataAccess.Entities.Meal", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("Id")
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Image")
-                        .HasMaxLength(250)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IngredientsJson")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
@@ -281,11 +280,6 @@ namespace MsaCookingApp.DataAccess.Migrations
 
                     b.Property<double>("ReadyInMinutes")
                         .HasColumnType("REAL");
-
-                    b.Property<string>("SpoonacularId")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Summary")
                         .IsRequired()

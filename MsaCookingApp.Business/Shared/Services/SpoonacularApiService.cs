@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Business.Shared.Settings;
+using MsaCookingApp.Contracts.Features.Meals.DTOs;
 using MsaCookingApp.Contracts.Shared.Abstractions.Services;
 using MsaCookingApp.Contracts.Shared.DTOs;
 using Newtonsoft.Json;
@@ -79,5 +80,50 @@ public class SpoonacularApiService : ISpoonacularApiService
                 JsonConvert.DeserializeObject<SpoonacularIngredientsSearchResultDto>(responseStringContent);
             return spoonacularIngredientSearchResult;
         }, "Error when searching spoonacular ingredient");
+    }
+
+    public async Task<SpoonacularSearchMealResultDto?> SearchSpoonacularMealAsync(string query)
+    {
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
+        {
+            var spoonacularApiClientName = _apiClientsOptions.Spoonacular?.Name ?? "";
+            var spoonacularApiClient = _httpClientFactory.CreateClient(spoonacularApiClientName);
+            
+            var response = await spoonacularApiClient.GetAsync(query);
+        
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ServiceException(StatusCodes.Status500InternalServerError, "Error with the spoonacular api");
+            }
+
+            var responseStringContent = await response.Content.ReadAsStringAsync();
+            var spoonacularMealsSearchResult =
+                JsonConvert.DeserializeObject<SpoonacularSearchMealResultDto>(responseStringContent);
+            return spoonacularMealsSearchResult;
+        }, "Error searching meal spoonacular api");
+    }
+
+    public async Task<SpoonacularGetMealDto?> GetSpoonacularMealAsync(string mealId)
+    {
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
+        {
+            var spoonacularApiClientName = _apiClientsOptions.Spoonacular?.Name ?? "";
+            var spoonacularApiClient = _httpClientFactory.CreateClient(spoonacularApiClientName);
+            var spoonacularApiKey = _spoonacularOptions.ApiKey ?? "";
+        
+            var url = $"recipes/informationBulk?apiKey={spoonacularApiKey}&ids={mealId}";
+        
+            var response = await spoonacularApiClient.GetAsync(url);
+        
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ServiceException(StatusCodes.Status500InternalServerError, "Error with the spoonacular api");
+            }
+
+            var responseStringContent = await response.Content.ReadAsStringAsync();
+            var spoonacularGetMeals =
+                JsonConvert.DeserializeObject<IEnumerable<SpoonacularGetMealDto>>(responseStringContent);
+            return spoonacularGetMeals?.First();
+        }, "Error when retrieving spoonacular meal");
     }
 }
