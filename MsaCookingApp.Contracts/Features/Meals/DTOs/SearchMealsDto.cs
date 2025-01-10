@@ -8,10 +8,10 @@ public class SearchMealsDto
     [MaxLength(20)]
     public required string Query { get; set; }
     [Required]
-    public required int CuisineId { get; set; }
+    public int? CuisineId { get; set; }
     [Required]
     public required bool UseProfileDiet { get; set; } = true;
-    public string? Diet { get; set; }
+    public int? DietId { get; set; }
     [Required]
     public required bool UseAllFridgeIngredients { get; set; } = false;
     public IEnumerable<string>? Ingredients { get; set; }

@@ -102,4 +102,28 @@ public class SpoonacularApiService : ISpoonacularApiService
             return spoonacularMealsSearchResult;
         }, "Error searching meal spoonacular api");
     }
+
+    public async Task<SpoonacularGetMealDto?> GetSpoonacularMealAsync(string mealId)
+    {
+        return await _exceptionHandlingService.ExecuteWithExceptionHandlingAsync(async () =>
+        {
+            var spoonacularApiClientName = _apiClientsOptions.Spoonacular?.Name ?? "";
+            var spoonacularApiClient = _httpClientFactory.CreateClient(spoonacularApiClientName);
+            var spoonacularApiKey = _spoonacularOptions.ApiKey ?? "";
+        
+            var url = $"recipes/informationBulk?apiKey={spoonacularApiKey}&ids={mealId}";
+        
+            var response = await spoonacularApiClient.GetAsync(url);
+        
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ServiceException(StatusCodes.Status500InternalServerError, "Error with the spoonacular api");
+            }
+
+            var responseStringContent = await response.Content.ReadAsStringAsync();
+            var spoonacularGetMeals =
+                JsonConvert.DeserializeObject<IEnumerable<SpoonacularGetMealDto>>(responseStringContent);
+            return spoonacularGetMeals?.First();
+        }, "Error when retrieving spoonacular meal");
+    }
 }
