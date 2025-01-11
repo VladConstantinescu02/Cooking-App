@@ -1,14 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MsaCookingApp.Api;
-using MsaCookingApp.Api.Filters;
 using MsaCookingApp.Business;
 using MsaCookingApp.Business.Shared.Settings;
 using MsaCookingApp.DataAccess;
-using MsaCookingApp.DataAccess.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 

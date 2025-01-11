@@ -1,5 +1,4 @@
 ﻿using MsaCookingApp.Contracts.Features.Fridge.DTOs;
-using MsaCookingApp.Contracts.Features.Test.DTOs;
 using MsaCookingApp.Contracts.Shared.DTOs;
 using MsaCookingApp.DataAccess.Entities;
 using Profile = AutoMapper.Profile;
@@ -10,7 +9,6 @@ public class IngredientMapperProfile : Profile
 {
     public IngredientMapperProfile()
     {
-        CreateMap<Ingredient, IngredientDto>();
         CreateMap<Ingredient, ProfileAlergenDto>();
         CreateMap<IngredientMeasuringUnit, GetIngredientMeasuringUnitDto>();
         CreateMap<FridgeIngredient, GetFridgeIngredientDto>()

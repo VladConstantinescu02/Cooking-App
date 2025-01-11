@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.DataAccess.Context;
 using MsaCookingApp.DataAccess.Entities;
 using MsaCookingApp.DataAccess.Repositories;

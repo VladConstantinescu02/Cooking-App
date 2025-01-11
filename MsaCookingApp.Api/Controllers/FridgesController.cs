@@ -18,7 +18,7 @@ public class FridgesController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetFridgeIngredientAsync()
+    public async Task<IActionResult> GetFridgeAsync()
     {
         var email = AuthorizationHelper.GetUserEmailFromClaims(User);
         return Ok(await _fridgesService.GetFridgeAsync(email));

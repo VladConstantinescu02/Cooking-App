@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Contracts.Features.Fridge.Abstractions.Services;
 using MsaCookingApp.Contracts.Features.Fridge.DTOs;
-using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.Contracts.Shared.Abstractions.Services;
 using MsaCookingApp.Contracts.Shared.DTOs;
 using MsaCookingApp.DataAccess.Entities;
