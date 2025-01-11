@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddTransient<IFridgesService, FridgesService>();
         services.AddTransient<IExceptionHandlingService, ExceptionHandlingService>();
         services.AddTransient<IMealsService, MealsService>();
+        services.AddTransient<IImageUploadService, ImageUploadService>();
         return services;
     }
 }
