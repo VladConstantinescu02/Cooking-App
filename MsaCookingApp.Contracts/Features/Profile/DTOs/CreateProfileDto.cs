@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 
 namespace MsaCookingApp.Contracts.Features.Profile.DTOs;
 
 public class CreateProfileDto
 {
     private string _userName;
-    private string? _profilePhotoUrl;
     private IEnumerable<string>? _ingredientAllergies;
     private int? _dietaryOptionId;
     private string? _newDietaryOption;
+    private IFormFile? _profilePhoto;
 
     [Required]
     [MaxLength(30)]
@@ -19,11 +20,10 @@ public class CreateProfileDto
         [MemberNotNull(nameof(_userName))] set => _userName = value;
     }
 
-    [MaxLength(256)]
-    public string? ProfilePhotoUrl
+    public IFormFile? ProfilePhoto
     {
-        get => _profilePhotoUrl;
-        set => _profilePhotoUrl = value;
+        get => _profilePhoto;
+        set => _profilePhoto = value;
     }
 
     public IEnumerable<string>? IngredientAllergies

@@ -20,8 +20,9 @@ public class ProfilesService : IProfilesService
     private readonly ISpoonacularApiService _spoonacularApiService;
     private readonly IMapper _mapper;
     private readonly IExceptionHandlingService _exceptionHandlingService;
+    private readonly IImageUploadService _imageUploadService;
 
-    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper, IRepository<DataAccess.Entities.Fridge> fridgeRepository, IExceptionHandlingService exceptionHandlingService)
+    public ProfilesService(IRepository<DataAccess.Entities.Profile> profileRepository, IUserRepository userRepository, IRepository<Ingredient> ingredientRepository, ISpoonacularApiService spoonacularApiService, IRepository<DietaryOption> dietaryOptionRepository, IMapper mapper, IRepository<DataAccess.Entities.Fridge> fridgeRepository, IExceptionHandlingService exceptionHandlingService, IImageUploadService imageUploadService)
     {
         _profileRepository = profileRepository;
         _userRepository = userRepository;
@@ -31,6 +32,7 @@ public class ProfilesService : IProfilesService
         _mapper = mapper;
         _fridgeRepository = fridgeRepository;
         _exceptionHandlingService = exceptionHandlingService;
+        _imageUploadService = imageUploadService;
     }
 
     public async Task<GetProfileResponseDto> GetProfileAsync(string? userEmail)
@@ -78,9 +80,13 @@ public class ProfilesService : IProfilesService
             var newProfile =
                 DataAccess.Entities.Profile.Create(createProfileDto.UserName, foundUser.DisplayName, foundUser.Id);
 
-            if (!string.IsNullOrEmpty(createProfileDto.ProfilePhotoUrl))
+            if (createProfileDto.ProfilePhoto != null)
             {
-                newProfile.ProfilePhotoUrl = createProfileDto.ProfilePhotoUrl;
+                var uploadImageResult = await _imageUploadService.UploadImageAsync(createProfileDto.ProfilePhoto);
+                if (!string.IsNullOrEmpty(uploadImageResult.ImageName))
+                {
+                    newProfile.ProfilePhotoUrl = uploadImageResult.ImageName;
+                }
             }
 
             if (createProfileDto.IngredientAllergies != null && createProfileDto.IngredientAllergies.Any())

@@ -1,4 +1,5 @@
 ﻿using MsaCookingApp.Contracts.Features.Meals.DTOs;
+using MsaCookingApp.Contracts.Shared.DTOs;
 
 namespace MsaCookingApp.Contracts.Features.Meals.Abstractions.Services;
 

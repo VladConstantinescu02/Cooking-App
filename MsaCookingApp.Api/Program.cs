@@ -83,6 +83,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<ApiClientsOptions>(builder.Configuration.GetSection("ApiClients"));
 builder.Services.Configure<SpoonacularOptions>(builder.Configuration.GetSection("Spoonacular"));
+builder.Services.Configure<ImageUploadOptions>(builder.Configuration.GetSection("ImageUpload"));
 
 builder.Services.AddHttpClient(builder.Configuration["ApiClients:Spoonacular:Name"] ?? "", client =>
 {
