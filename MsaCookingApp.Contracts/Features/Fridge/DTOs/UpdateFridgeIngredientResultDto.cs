@@ -1,8 +1,16 @@
-﻿namespace MsaCookingApp.Contracts.Features.Fridge.DTOs;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MsaCookingApp.Contracts.Features.Fridge.DTOs;
 
 public class UpdateFridgeIngredientResultDto
 {
-    public required string Message { get; set; }
+    private string _message;
+
+    public required string Message
+    {
+        get => _message;
+        [MemberNotNull(nameof(_message))] set => _message = value;
+    }
 
     public static UpdateFridgeIngredientResultDto Create(string message)
     {
