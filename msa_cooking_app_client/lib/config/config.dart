@@ -1,3 +1,3 @@
 class AppConfig {
-  static const String apiBaseAddress = 'http://20.41.118.180:5000/';
+  static const String apiBaseAddress = '20.41.118.180:5000';
 }

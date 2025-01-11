@@ -6,7 +6,6 @@ import 'package:msa_cooking_app_client/features/authentication/screens/authentic
 import 'package:msa_cooking_app_client/features/fridge/screens/fridge_screen.dart';
 import 'package:msa_cooking_app_client/features/meals/screens/meals_screen.dart';
 import 'package:msa_cooking_app_client/features/profile/screens/profile_screen.dart';
-import 'package:msa_cooking_app_client/features/test/screens/ingredient_list_screen.dart';
 import 'package:msa_cooking_app_client/main.dart';
 import 'package:msa_cooking_app_client/shared/widgets/layout.dart';
 
