@@ -1,10 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.DataAccess.Context;
-using MsaCookingApp.DataAccess.Entities;
-using MsaCookingApp.DataAccess.Exceptions;
+using MsaCookingApp.DataAccess.Repositories.Abstractions;
 
 namespace MsaCookingApp.DataAccess.Repositories;
 

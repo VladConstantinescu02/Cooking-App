@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
+namespace MsaCookingApp.DataAccess.Repositories.Abstractions;
 
 public interface IRepository<TEntity>
 {

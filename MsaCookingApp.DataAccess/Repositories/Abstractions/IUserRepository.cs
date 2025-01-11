@@ -1,5 +1,4 @@
-﻿using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
-using MsaCookingApp.DataAccess.Entities;
+﻿using MsaCookingApp.DataAccess.Entities;
 
 namespace MsaCookingApp.DataAccess.Repositories.Abstractions;
 

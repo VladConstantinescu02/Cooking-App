@@ -1,12 +1,30 @@
-﻿namespace MsaCookingApp.Contracts.Shared.DTOs;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MsaCookingApp.Contracts.Shared.DTOs;
 
 public class SpoonacularIngredientSearchResultDto
 {
-    public string Id { get; set; } = "";
-    public required string Name { get; set; }
+    private string _id = "";
+    private string _name;
+    private IEnumerable<SpoonacularIngredientSearchResultChildDto> _children = new List<SpoonacularIngredientSearchResultChildDto>();
 
-    public IEnumerable<SpoonacularIngredientSearchResultChildDto> Children { get; set; } =
-        new List<SpoonacularIngredientSearchResultChildDto>();
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+
+    public required string Name
+    {
+        get => _name;
+        [MemberNotNull(nameof(_name))] set => _name = value;
+    }
+
+    public IEnumerable<SpoonacularIngredientSearchResultChildDto> Children
+    {
+        get => _children;
+        set => _children = value;
+    }
 
     public static SpoonacularIngredientSearchResultDto Create(string id, string name)
     {

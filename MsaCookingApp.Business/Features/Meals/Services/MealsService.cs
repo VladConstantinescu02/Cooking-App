@@ -7,7 +7,6 @@ using MsaCookingApp.Business.Shared.Exceptions;
 using MsaCookingApp.Business.Shared.Settings;
 using MsaCookingApp.Contracts.Features.Meals.Abstractions.Services;
 using MsaCookingApp.Contracts.Features.Meals.DTOs;
-using MsaCookingApp.Contracts.Shared.Abstractions.Repositories;
 using MsaCookingApp.Contracts.Shared.Abstractions.Services;
 using MsaCookingApp.DataAccess.Entities;
 using MsaCookingApp.DataAccess.Repositories.Abstractions;

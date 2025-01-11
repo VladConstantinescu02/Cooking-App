@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Profile\Abstractions\Repositories\" />
-      <Folder Include="Features\Test\Abstractions\Repositories\" />
       <Folder Include="Features\User\DTOs\" />
       <Folder Include="Shared\Abstractions\Repositories\" />
     </ItemGroup>

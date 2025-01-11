@@ -1,9 +1,23 @@
-﻿namespace MsaCookingApp.Contracts.Features.Meals.DTOs;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MsaCookingApp.Contracts.Features.Meals.DTOs;
 
 public class GetAllMealsResultDto
 {
-    public required string Message { get; set; }
-    public IEnumerable<GetAllMealsMealDto> Meals { get; set; } = new List<GetAllMealsMealDto>();
+    private string _message;
+    private IEnumerable<GetAllMealsMealDto> _meals = new List<GetAllMealsMealDto>();
+
+    public required string Message
+    {
+        get => _message;
+        [MemberNotNull(nameof(_message))] set => _message = value;
+    }
+
+    public IEnumerable<GetAllMealsMealDto> Meals
+    {
+        get => _meals;
+        set => _meals = value;
+    }
 
     public static GetAllMealsResultDto Create(string message, IEnumerable<GetAllMealsMealDto> meals)
     {

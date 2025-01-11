@@ -4,10 +4,28 @@ namespace MsaCookingApp.Contracts.Features.Meals.DTOs;
 
 public class GetMealDto
 {
-    public SpoonacularGetMealDto? Meal { get; set; }
+    private SpoonacularGetMealDto? _meal;
+    private string? _lastPreparedAt;
+    private bool _wasPrepared;
+
+    public SpoonacularGetMealDto? Meal
+    {
+        get => _meal;
+        set => _meal = value;
+    }
+
     [MaxLength(250)]
-    public string? LastPreparedAt { get; set; }
-    public required bool WasPrepared { get; set; } = false;
+    public string? LastPreparedAt
+    {
+        get => _lastPreparedAt;
+        set => _lastPreparedAt = value;
+    }
+
+    public required bool WasPrepared
+    {
+        get => _wasPrepared;
+        set => _wasPrepared = value;
+    }
 
     public static GetMealDto Create(SpoonacularGetMealDto? meal, string? lastPreparedAt, bool wasPrepared)
     {
