@@ -80,7 +80,7 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  await ref.read(profileProvider.notifier).getProfile();
+                  await ref.watch(profileProvider.notifier).getProfile();
                   Navigator.of(context).pop();
                 },
                 child: const Text("OK"),

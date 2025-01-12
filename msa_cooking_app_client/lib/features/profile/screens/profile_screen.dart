@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart';
 import 'package:msa_cooking_app_client/features/profile/models/profile.dart' as profile_model;
 import 'package:msa_cooking_app_client/features/profile/widgets/profile_avatar.dart';
+import 'package:msa_cooking_app_client/shared/providers/profile_api_client_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -86,6 +87,35 @@ class ProfileScreen extends ConsumerWidget {
               },
               icon: const Icon(Icons.edit),
               label: const Text('Edit Profile'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete profile'),
+                      content: const Text('Are you sure you want to delete your profile?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await ref.watch(profileApiClientProvider).deleteProfile();
+                            await ref.watch(profileProvider.notifier).getProfile();
+                          },
+                          child: const Text("Yes"),
+                        ),
+                      ],
+                    ),
+                );
+              },
+              icon: const Icon(Icons.delete),
+              label: const Text('Delete Profile'),
+              style: ButtonStyle(foregroundColor: WidgetStateProperty.all<Color>(Colors.redAccent)),
             ),
           ],
         ),

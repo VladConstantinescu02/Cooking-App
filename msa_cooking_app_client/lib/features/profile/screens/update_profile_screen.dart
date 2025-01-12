@@ -98,9 +98,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  await ref.read(profileProvider.notifier).getProfile().then((data) {
-                    GoRouter.of(context).go("/profile");
-                  });
+                  await ref.watch(profileProvider.notifier).getProfile();
                 },
                 child: const Text("OK"),
               ),
@@ -163,30 +161,47 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                dietaryOptionsAsyncValue.when(
-                  data: (dietaryOptions) => DropdownButtonFormField<String>(
-                    value: _selectedDietaryOption?.name,
-                    decoration: const InputDecoration(
-                      labelText: "Select Dietary Option",
-                      icon: Icon(Icons.food_bank_outlined),
-                      border: OutlineInputBorder(),
+              dietaryOptionsAsyncValue.when(
+                data: (dietaryOptions) {
+                  final dropdownItems = [
+                    DropdownMenuItem<String>(
+                      value: null, // Placeholder option for null
+                      child: Text("Select an option"),
                     ),
-                    items: dietaryOptions.map((option) {
+                    ...dietaryOptions.map((option) {
                       return DropdownMenuItem<String>(
                         value: option.name,
                         child: Text(option.name),
                       );
                     }).toList(),
+                  ];
+
+                  return DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: "Select Dietary Option",
+                      icon: Icon(Icons.food_bank_outlined),
+                      border: OutlineInputBorder(),
+                    ),
+                    items: dropdownItems,
                     onChanged: (newValue) {
                       setState(() {
-                        _selectedDietaryOption = dietaryOptions.firstWhere((o) => o.name == newValue);
+                        _selectedDietaryOption = dietaryOptions.firstWhere(
+                              (o) => o.name == newValue,
+                        );
                       });
                     },
-                  ),
-                  loading: () => const CircularProgressIndicator(),
-                  error: (error, _) => Text('Error: $error'),
-                ),
-                const SizedBox(height: 20),
+                    validator: (value) {
+                      if (value == null) {
+                        return "Please select a dietary option";
+                      }
+                      return null;
+                    },
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, _) => Text('Error: $error'),
+              ),
+              const SizedBox(height: 20),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
