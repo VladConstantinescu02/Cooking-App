@@ -366,12 +366,6 @@ public class MealsService : IMealsService
                 throw new ServiceException(StatusCodes.Status404NotFound, "User not found");
             }
 
-            var foundProfile = (await _profileRepository.FindAsync((p) => p.UserId == foundUser.Id)).FirstOrDefault();
-            if (foundProfile == null)
-            {
-                throw new ServiceException(StatusCodes.Status404NotFound, "User does not have a profile");
-            }
-
             var dietaryOptions =
                 (await _dietaryOptionRepository.GetAllAsync()).Select(d => _mapper.Map<GetDietaryOptionDto>(d));
 
