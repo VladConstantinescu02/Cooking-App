@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'button.dart';
+import '../../../shared/widgets/button.dart';
 
 class IngredientDialogBox extends StatefulWidget {
   final TextEditingController controllerName;
   final TextEditingController controllerCalorie;
   final TextEditingController controllerAmount;
-  final Function(String) onSave; // Accepts a function with a String parameter
+  final Function(String) onSave;
   final VoidCallback onCancel;
 
   const IngredientDialogBox({
