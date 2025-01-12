@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:msa_cooking_app_client/features/profile/models/create_profile.dart';
 import 'package:msa_cooking_app_client/features/profile/models/create_profile_response.dart';
+import 'package:msa_cooking_app_client/features/profile/models/delete_profile_response.dart';
 import 'package:msa_cooking_app_client/features/profile/models/get_profile_response.dart';
 import 'package:msa_cooking_app_client/features/profile/models/profile.dart';
 
@@ -103,11 +104,33 @@ class ProfilesApiClient {
         final responseResult = CreateProfileResponse.fromJson(json);
         return Success(responseResult);
       } else {
-        return Failure(Exception("No response"));
+        final json = jsonDecode(response.body);
+        return Failure(Exception(json["title"]));
       }
     } on Exception catch (e) {
       log("Error when updating profile $e");
       return Failure(Exception("Error when updating profile"));
+    }
+  }
+
+  Future<Result<DeleteProfileResponse, Exception>> deleteProfile() async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    try {
+      final response = await client.delete(Uri.http(_baseAddress, "api/profile"), headers: headers);
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        final responseProfile = DeleteProfileResponse.fromJson(json);
+        return Success(responseProfile);
+      } else {
+        return Failure(Exception("No profile!"));
+      }
+    } on Exception catch (e) {
+      log("Error when deleting profile $e");
+      return Failure(Exception("Error on deleting profile"));
     }
   }
 }
