@@ -10,14 +10,16 @@ class Navigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: navigationShell.currentIndex,
+      currentIndex: navigationShell.currentIndex < navigationItems.length
+          ? navigationShell.currentIndex
+          : 0,
       onTap: _onItemTapped,
       selectedItemColor: Colors.black,
       unselectedItemColor: Colors.black,
       items: navigationItems.map((item) {
         return BottomNavigationBarItem(
-            icon: Icon(item.icon),
-            label: item.label
+          icon: Icon(item.icon),
+          label: item.label,
         );
       }).toList(),
     );

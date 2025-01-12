@@ -1,4 +1,3 @@
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:msa_cooking_app_client/features/authentication/models/authenticate_user_result.dart';
 import 'package:msa_cooking_app_client/features/authentication/models/user_account.dart';
 import 'package:msa_cooking_app_client/features/authentication/providers/authentication_service_provider.dart';
@@ -7,6 +6,8 @@ import 'package:msa_cooking_app_client/shared/errors/result.dart';
 import 'package:msa_cooking_app_client/shared/helpers/secure_storage.dart';
 import 'package:msa_cooking_app_client/shared/providers/secure_storage_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart' as profile_provider;
+import 'package:msa_cooking_app_client/features/profile/models/profile.dart' as profile_model;
 
 part 'authentication_provider.g.dart';
 
@@ -14,16 +15,22 @@ part 'authentication_provider.g.dart';
 class Authentication extends _$Authentication {
   AuthenticationService get _authenticationService => ref.watch(authenticationServiceProvider);
   SecureStorage get _secureStorage => ref.watch(secureStorageProvider);
+  AsyncValue<profile_model.Profile> get _profileState => ref.watch(profile_provider.profileProvider);
 
   Future<void> signInWithGoogle() async {
     state = const AsyncLoading();
     Result<AuthenticateUserResult?, Exception> result = await _authenticationService.authenticateUser();
+
     if (result is Success<AuthenticateUserResult?, Exception>) {
       final googleAccount = result.value?.googleAccount;
+
       if (googleAccount != null) {
         final userAccount = UserAccount.fromGoogleAccount(googleAccount, result.value?.jwtToken ?? "");
         state = AsyncValue<UserAccount>.data(userAccount);
+
         await _secureStorage.setUserAccountState(userAccount);
+
+        await ref.read(profile_provider.profileProvider.notifier).getProfile();
       } else {
         state = AsyncError('Google account is null', StackTrace.current);
       }
@@ -56,4 +63,5 @@ class Authentication extends _$Authentication {
     return UserAccount.defaultAccount();
   }
 }
+
 
