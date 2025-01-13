@@ -88,7 +88,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          addIngredient(context); // Add ingredient button
+          addIngredient(context);
         },
         backgroundColor: Colors.black87,
         elevation: 0,

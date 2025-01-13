@@ -14,7 +14,8 @@ class _MealsScreenState extends State<MealsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Your Meals"),
+        backgroundColor: Colors.white,
+        title: const Text("Your Meals"),
         elevation: 0,
       ),
       body: ListView(
