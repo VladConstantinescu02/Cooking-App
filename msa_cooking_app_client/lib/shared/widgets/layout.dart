@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class Layout extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
+
   const Layout({super.key, required this.navigationShell});
 
   @override
@@ -16,8 +17,9 @@ class Layout extends ConsumerWidget {
         backgroundColor: Colors.white,
         title: Row(
           children: [
-            Image.asset("images/logo.png",
-            fit: BoxFit.contain,
+            Image.asset(
+              "images/logo.png",
+              fit: BoxFit.contain,
               height: 30,
             ),
           ],
@@ -25,13 +27,13 @@ class Layout extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
-                  ref.read(authenticationProvider.notifier).signOut();
+                ref.read(authenticationProvider.notifier).signOut();
               },
               icon: const Icon(Icons.logout_outlined))
         ],
       ),
-        body: navigationShell,
-        bottomNavigationBar: Navigation(navigationShell: navigationShell),
+      body: navigationShell,
+      bottomNavigationBar: Navigation(navigationShell: navigationShell),
     );
   }
 }

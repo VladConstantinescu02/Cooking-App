@@ -5,6 +5,7 @@ import '../../../config/navigation/navigation_items.dart';
 
 class Navigation extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
+
   const Navigation({super.key, required this.navigationShell});
 
   @override
@@ -18,9 +19,7 @@ class Navigation extends StatelessWidget {
         unselectedItemColor: Colors.black,
         items: navigationItems.map((item) {
           return BottomNavigationBarItem(
-              icon: Icon(item.icon),
-              label: item.label
-          );
+              icon: Icon(item.icon), label: item.label);
         }).toList(),
       ),
     );
