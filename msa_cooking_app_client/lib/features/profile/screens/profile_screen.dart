@@ -33,6 +33,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildProfileContent(BuildContext context, profile_model.Profile profile, WidgetRef ref) {
+    final profileAsync = ref.watch(profileProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -97,11 +98,21 @@ class ProfileScreen extends ConsumerWidget {
                           child: const Text("Cancel"),
                         ),
                         TextButton(
-                          onPressed: () async {
-                            await ref.watch(profileApiClientProvider).deleteProfile();
-                            await ref.watch(profileProvider.notifier).getProfile();
+                          onPressed: profileAsync.isLoading
+                              ? null
+                              : () async {
+                            await ref.read(profileProvider.notifier).deleteProfile(context);
                           },
-                          child: const Text("Yes"),
+                          child: profileAsync.isLoading
+                            ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                            ),
+                            )
+                    : const Text("Delete Profile"),
                         ),
                       ],
                     ),

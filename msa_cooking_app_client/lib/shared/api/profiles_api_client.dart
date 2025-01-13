@@ -49,10 +49,11 @@ class ProfilesApiClient {
       if (createProfile.dietaryOptionId != null) {
         request.fields['dietaryOptionId'] = createProfile.dietaryOptionId.toString();
       }
-      if (createProfile.ingredientAllergies != null) {
-        createProfile.ingredientAllergies?.forEach((a) {
-          request.fields['ingredientAllergies'] = a;
-        });
+      final ingredientAllergies = createProfile.ingredientAllergies;
+      if (ingredientAllergies != null) {
+        for (int i = 0; i < ingredientAllergies.length; i++) {
+          request.fields['ingredientAllergies[$i]'] = ingredientAllergies[i];
+        }
       }
       request.fields['userName'] = createProfile.userName;
       request.headers.addAll({

@@ -48,12 +48,8 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
     });
   }
 
-  Future<void> _createProfile() async {
+  Future<void> _createProfile(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
       final ingredientsToAvoidIds = _ingredientsToAvoid.isNotEmpty
           ? _ingredientsToAvoid.map((i) => i.id).toList()
           : null;
@@ -65,40 +61,14 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
         _profilePhoto,
       );
 
-      final result = await ref.read(profileApiClientProvider).createProfile(createProfile);
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (result is Success<CreateProfileResponse, Exception>) {
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Success"),
-            content: const Text("Profile created successfully!"),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await ref.watch(profileProvider.notifier).getProfile();
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      } else if (result is Failure<CreateProfileResponse, Exception>) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: ${result.exception.toString()}")),
-        );
-      }
+      await ref.read(profileProvider.notifier).createProfile(createProfile, context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final dietaryOptionsAsyncValue = ref.watch(dietaryOptionsProvider);
+    final profileState = ref.watch(profileProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Create Profile")),
@@ -204,11 +174,11 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
                   ),
                 ],
                 const SizedBox(height: 20),
-                if (_isLoading)
+                if (profileState.isLoading)
                   const CircularProgressIndicator()
                 else
                   OutlinedButton(
-                    onPressed: _createProfile,
+                    onPressed: () => _createProfile(context),
                     child: const Text("Create Profile"),
                   ),
               ],
