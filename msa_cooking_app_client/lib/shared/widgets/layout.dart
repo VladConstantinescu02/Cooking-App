@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/authentication/providers/authentication_provider.dart';
 import 'package:msa_cooking_app_client/features/navigation/widgets/navigation.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Layout extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
@@ -25,14 +24,25 @@ class Layout extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                ref.read(authenticationProvider.notifier).signOut();
-              },
-              icon: const Icon(Icons.logout_outlined))
+            onPressed: () {
+              ref.read(authenticationProvider.notifier).signOut();
+            },
+            icon: const Icon(Icons.logout_outlined),
+            color: Colors.black,
+          ),
         ],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: navigationShell,
-      bottomNavigationBar: Navigation(navigationShell: navigationShell),
+      backgroundColor: Colors.white,
+      body: Container(
+        color: Colors.white,
+        child: navigationShell,
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Navigation(navigationShell: navigationShell),
+      ),
     );
   }
 }

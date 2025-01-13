@@ -13,31 +13,22 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(profileProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
-      body: Container(
-          color: Colors.white,
-          child: profileAsync.when(
-            data: (profile) => _buildProfileContent(context, profile, ref),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, color: Colors.red, size: 50),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Failed to load profile. Please try again.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
+    return profileAsync.when(
+      data: (profile) => _buildProfileContent(context, profile, ref),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, color: Colors.red, size: 50),
+            const SizedBox(height: 16),
+            Text(
+              'Failed to load profile. Please try again.',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          ),
-      );
+          ],
+        ),
+      ),
     );
   }
 
