@@ -27,7 +27,7 @@ class SecureStorage {
       if (userAccountStateString == null) {
         return const Success(null);
       }
-      return Success(UserAccount.fromJson(jsonDecode(userAccountStateString ?? "")));
+      return Success(UserAccount.fromJson(jsonDecode(userAccountStateString)));
     } on Exception catch(e) {
       log("Error saving account state: $e");
       return Failure(Exception("Unable to get user account"));

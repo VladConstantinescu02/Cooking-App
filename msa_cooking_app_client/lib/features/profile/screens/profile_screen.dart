@@ -1,105 +1,141 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:msa_cooking_app_client/features/authentication/providers/authentication_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart';
+import 'package:msa_cooking_app_client/features/profile/models/profile.dart' as profile_model;
+import 'package:msa_cooking_app_client/features/profile/widgets/profile_avatar.dart';
+import 'package:msa_cooking_app_client/shared/providers/profile_api_client_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAccountAsync = ref.watch(authenticationProvider);
+    final profileAsync = ref.watch(profileProvider);
 
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: userAccountAsync.when(
-          data: (userAccount) {
-            return SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        centerTitle: true,
+      ),
+      body: Container(
+          color: Colors.white,
+          child: profileAsync.when(
+            data: (profile) => _buildProfileContent(context, profile, ref),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Profile Screen",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
+                  const Icon(Icons.error, color: Colors.red, size: 50),
                   const SizedBox(height: 16),
-                  const Icon(
-                    Icons.account_circle_rounded,
-                    size: 100,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "Name: ${userAccount.displayName}",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "Email: ${userAccount.email}",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(authenticationProvider.notifier).signOut();
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black87,
-                        elevation: 0
-                    ),
-                    child: const Text(
-                      "Sign Out",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  Text(
+                    'Failed to load profile. Please try again.',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
               ),
-            );
-          },
-          loading: () {
+            ),
+          ),
+      );
+    );
+  }
 
-            return const CircularProgressIndicator();
-          },
-          error: (error, stackTrace) {
+  Widget _buildProfileContent(BuildContext context, profile_model.Profile profile, WidgetRef ref) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ProfileAvatar(profile.profilePhotoUrl ?? ''),
+            const SizedBox(height: 16),
+            Text(
+              profile.fullName ?? 'Guest User',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            if (profile.userName != null)
+              Text(
+                '@${profile.userName}',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey),
+              ),
+            const SizedBox(height: 24),
+            _buildSectionHeader(context, 'Allergens'),
+            if (profile.alergens != null && profile.alergens!.isNotEmpty)
+              ...profile.alergens!.map((alergen) => ListTile(
+                leading: const Icon(Icons.warning_amber_outlined),
+                title: Text(alergen.name),
+              )),
+            if (profile.alergens == null || profile.alergens!.isEmpty)
+              const Text('No allergens listed.'),
+            const SizedBox(height: 16),
+            _buildSectionHeader(context, 'Dietary Restrictions'),
+            if (profile.dietRestriction != null)
+              ListTile(
+                leading: const Icon(Icons.restaurant_menu),
+                title: Text(profile.dietRestriction!.name),
+              ),
+            if (profile.dietRestriction == null)
+              const Text('No dietary restrictions listed.'),
+            const SizedBox(height: 32),
+            // Edit Profile Button
+            ElevatedButton.icon(
+              onPressed: () {
+                GoRouter.of(context).go('/update-profile');
+              },
+              icon: const Icon(Icons.edit),
+              label: const Text('Edit Profile'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete profile'),
+                      content: const Text('Are you sure you want to delete your profile?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await ref.watch(profileApiClientProvider).deleteProfile();
+                            await ref.watch(profileProvider.notifier).getProfile();
+                          },
+                          child: const Text("Yes"),
+                        ),
+                      ],
+                    ),
+                );
+              },
+              icon: const Icon(Icons.delete),
+              label: const Text('Delete Profile'),
+              style: ButtonStyle(foregroundColor: WidgetStateProperty.all<Color>(Colors.redAccent)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Colors.red,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "Error: $error",
-                  style: const TextStyle(fontSize: 18, color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.refresh(authenticationProvider);
-                  },
-                  child: const Text("Retry"),
-                ),
-              ],
-            );
-          },
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

@@ -19,7 +19,7 @@ class AuthenticationApiClient {
   Future<Result<String?, Exception>> getAuthenticationToken(GetAuthTokenRequest getAuthTokenRequest) async {
     try {
       final requestBody = jsonEncode(getAuthTokenRequest.toJson());
-      final response = await client.post(Uri.http(_baseAddress, "/api/authenticate/google"), headers: headers, body: requestBody);
+      final response = await client.post(Uri.http(_baseAddress, "api/authenticate/google"), headers: headers, body: requestBody);
       if (response.statusCode == 200) {
         return Success(jsonDecode(response.body));
       } else {

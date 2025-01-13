@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class Layout extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
-
   const Layout({super.key, required this.navigationShell});
 
   @override

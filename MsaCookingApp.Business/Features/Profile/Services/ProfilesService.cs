@@ -133,7 +133,14 @@ public class ProfilesService : IProfilesService
             }
 
             foundProfile.UserName = updateProfileDto.UserName;
-            foundProfile.ProfilePhotoUrl = updateProfileDto.ProfilePhotoUrl;
+            if (updateProfileDto.ProfilePhoto != null)
+            {
+                var uploadImageResult = await _imageUploadService.UploadImageAsync(updateProfileDto.ProfilePhoto);
+                if (!string.IsNullOrEmpty(uploadImageResult.ImageName))
+                {
+                    foundProfile.ProfilePhotoUrl = uploadImageResult.ImageName;
+                }
+            }
             
             if (updateProfileDto.IngredientAllergies != null && updateProfileDto.IngredientAllergies.Any())
             {

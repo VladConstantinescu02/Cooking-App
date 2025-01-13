@@ -19,11 +19,11 @@ class AuthenticationService {
       if (googleAccount == null) return Failure(Exception("Unsuccessful login"));
       final googleAuth = await googleAccount.authentication;
       final idToken = googleAuth.idToken;
-      final accessToken = googleAuth.accessToken ?? "";
+
       if (idToken == null) {
         return Failure(Exception("Could not retrieve id token"));
       }
-      final apiJwtTokenResult = await _authenticationApiClient.getAuthenticationToken(GetAuthTokenRequest(idToken, accessToken));
+      final apiJwtTokenResult = await _authenticationApiClient.getAuthenticationToken(GetAuthTokenRequest(idToken));
       return switch(apiJwtTokenResult) {
         Success<String?, Exception>() => Success(AuthenticateUserResult(apiJwtTokenResult.value, googleAccount)),
         Failure<String?, Exception>() => Failure(Exception(apiJwtTokenResult.exception.toString()))
