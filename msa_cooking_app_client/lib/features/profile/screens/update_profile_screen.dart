@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_dietary_option.dart';
 import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart';
@@ -30,18 +29,21 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   final TextEditingController _userNameController = TextEditingController();
   File? _profilePhoto;
   GetDietaryOption? _selectedDietaryOption;
-  List<SearchIngredient> _ingredientsToAvoid = [];
+  final List<SearchIngredient> _ingredientsToAvoid = [];
   bool _isLoading = false;
 
   String? _profilePhotoName;
 
   void _loadProfile() {
-    final profile = ref.watch(profileProvider);
+    final profile = ref.read(profileProvider);
     if (profile is AsyncData<profile_model.Profile>) {
-      _userNameController.text = profile.value.userName ?? '';
-      _selectedDietaryOption = GetDietaryOption(profile.value.dietRestriction?.id ?? 0, profile.value.dietRestriction?.name ?? '');
-      _ingredientsToAvoid = [];
-      _ingredientsToAvoid.addAll(profile.value.alergens?.map((a) => SearchIngredient(a.id, a.name)) ?? List.empty());
+      if (_userNameController.text == '') {
+        _userNameController.text = profile.value.userName ?? '';
+      }
+      if (_ingredientsToAvoid == []) {
+        _ingredientsToAvoid.addAll(profile.value.alergens?.map((a) => SearchIngredient(a.id, a.name)) ?? List.empty());
+      }
+      _selectedDietaryOption ??= profile.value.dietRestriction != null ? GetDietaryOption(profile.value.dietRestriction!.id, profile.value.dietRestriction!.name) : null;
       if (profile.value.profilePhotoUrl != null) {
         _profilePhotoName = profile.value.profilePhotoUrl;
       }
@@ -68,9 +70,6 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
 
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
 
       final ingredientsToAvoidIds = _ingredientsToAvoid.isNotEmpty
           ? _ingredientsToAvoid.map((i) => i.id).toList()
@@ -83,33 +82,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
         _profilePhoto,
       );
 
-      final result = await ref.read(profileApiClientProvider).updateProfile(createProfile);
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (result is Success<CreateProfileResponse, Exception>) {
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Success"),
-            content: const Text("Profile updated successfully!"),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await ref.watch(profileProvider.notifier).getProfile();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      } else if (result is Failure<CreateProfileResponse, Exception>) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: ${result.exception.toString()}")),
-        );
-      }
+      await ref.read(profileProvider.notifier).updateProfile(createProfile);
     }
   }
 
@@ -128,6 +101,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     _loadProfile();
     final dietaryOptionsAsyncValue = ref.watch(dietaryOptionsProvider);
+    final profileState = ref.watch(profileProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Update Profile")),
@@ -164,8 +138,8 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
               dietaryOptionsAsyncValue.when(
                 data: (dietaryOptions) {
                   final dropdownItems = [
-                    DropdownMenuItem<String>(
-                      value: null, // Placeholder option for null
+                    const DropdownMenuItem<String>(
+                      value: null,
                       child: Text("Select an option"),
                     ),
                     ...dietaryOptions.map((option) {
@@ -173,10 +147,11 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                         value: option.name,
                         child: Text(option.name),
                       );
-                    }).toList(),
+                    }),
                   ];
 
                   return DropdownButtonFormField<String>(
+                    value: _selectedDietaryOption?.name,
                     decoration: const InputDecoration(
                       labelText: "Select Dietary Option",
                       icon: Icon(Icons.food_bank_outlined),
@@ -246,11 +221,11 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                   ),
                 ],
                 const SizedBox(height: 20),
-                if (_isLoading)
+                if (profileState.isLoading)
                   const CircularProgressIndicator()
                 else
                   OutlinedButton(
-                    onPressed: _updateProfile,
+                    onPressed: () => _updateProfile(),
                     child: const Text("Update Profile"),
                   ),
               ],

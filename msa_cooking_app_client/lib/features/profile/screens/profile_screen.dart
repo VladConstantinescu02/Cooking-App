@@ -13,32 +13,27 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(profileProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
-      body: profileAsync.when(
-        data: (profile) => _buildProfileContent(context, profile, ref),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, color: Colors.red, size: 50),
-              const SizedBox(height: 16),
-              Text(
-                'Failed to load profile. Please try again.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-          ),
+    return profileAsync.when(
+      data: (profile) => _buildProfileContent(context, profile, ref),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, color: Colors.red, size: 50),
+            const SizedBox(height: 16),
+            Text(
+              'Failed to load profile. Please try again.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildProfileContent(BuildContext context, profile_model.Profile profile, WidgetRef ref) {
+    final profileAsync = ref.watch(profileProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -103,11 +98,21 @@ class ProfileScreen extends ConsumerWidget {
                           child: const Text("Cancel"),
                         ),
                         TextButton(
-                          onPressed: () async {
-                            await ref.watch(profileApiClientProvider).deleteProfile();
-                            await ref.watch(profileProvider.notifier).getProfile();
+                          onPressed: profileAsync.isLoading
+                              ? null
+                              : () async {
+                            await ref.read(profileProvider.notifier).deleteProfile(context);
                           },
-                          child: const Text("Yes"),
+                          child: profileAsync.isLoading
+                            ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                            ),
+                            )
+                    : const Text("Delete Profile"),
                         ),
                       ],
                     ),
