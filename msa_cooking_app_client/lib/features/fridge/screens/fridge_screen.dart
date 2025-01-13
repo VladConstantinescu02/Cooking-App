@@ -82,6 +82,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
     return Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Your Fridge'),
         elevation: 0,
       ),

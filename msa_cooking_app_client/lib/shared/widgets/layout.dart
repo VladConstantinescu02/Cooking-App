@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/authentication/providers/authentication_provider.dart';
 import 'package:msa_cooking_app_client/features/navigation/widgets/navigation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Layout extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
@@ -12,7 +13,15 @@ class Layout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Msa Cooking App"),
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Image.asset("images/logo.png",
+            fit: BoxFit.contain,
+              height: 30,
+            ),
+          ],
+        ),
         actions: [
           IconButton(
               onPressed: () {
