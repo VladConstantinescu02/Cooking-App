@@ -5,14 +5,19 @@ class ChallengeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-        child: Column(
-          children: [
-            Text("Challenge Screen"),
-            Icon(Icons.home_filled)
-          ]
-        )
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Lets get cooking!',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 40,
+          ),
+        ),
+        elevation: 0,
+      ),
     );
   }
-
 }

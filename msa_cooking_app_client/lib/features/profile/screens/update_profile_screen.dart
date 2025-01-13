@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_dietary_option.dart';
 import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart';
@@ -164,7 +163,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
               dietaryOptionsAsyncValue.when(
                 data: (dietaryOptions) {
                   final dropdownItems = [
-                    DropdownMenuItem<String>(
+                    const DropdownMenuItem<String>(
                       value: null, // Placeholder option for null
                       child: Text("Select an option"),
                     ),
@@ -173,7 +172,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                         value: option.name,
                         child: Text(option.name),
                       );
-                    }).toList(),
+                    }),
                   ];
 
                   return DropdownButtonFormField<String>(

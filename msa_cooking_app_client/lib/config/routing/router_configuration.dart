@@ -25,7 +25,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: '/auth',
+      initialLocation: '/home',
       routes: <RouteBase> [
         GoRoute(
             path: '/auth',
@@ -41,7 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                     path: '/home',
                     name: 'Home',
-                    builder: (context, state) => profile.value?.id == null ? const CreateProfileScreen() : const MyApp(),
+                    builder: (context, state) => const MyApp(),
                 ),
               ]),
               StatefulShellBranch(routes: [
@@ -65,13 +65,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => profile.value?.id != null ? const ProfileScreen() : const CreateProfileScreen(),
                 )
               ]),
-              StatefulShellBranch(routes: [
-                GoRoute(
-                    path: '/error',
-                    name: 'Error',
-                    builder: (context, state) => const ErrorScreen()
-                )
-              ]),
+              // StatefulShellBranch(routes: [
+              //   GoRoute(
+              //       path: '/error',
+              //       name: 'Error',
+              //       builder: (context, state) => const ErrorScreen()
+              //   )
+              // ]),
               StatefulShellBranch(routes: [
                 GoRoute(
                     path: '/loading',
@@ -96,27 +96,27 @@ final routerProvider = Provider<GoRouter>((ref) {
             ]
         )
       ],
-    redirect: (context, state) {
-      final accountState = account;
-
-      if (accountState is AsyncLoading) {
-        return null;
-      }
-
-      if (accountState is AsyncError) {
-        return '/error';
-      }
-
-      var isAuthenticated = accountState.value?.isAuthenticated;
-      if (isAuthenticated == null) {
-        return null;
-      }
-
-      if (state.uri.toString() == '/auth') {
-        return isAuthenticated ? '/home' : null;
-      }
-
-      return isAuthenticated ? null : '/auth';
-    },
+    // redirect: (context, state) {
+    //   final accountState = account;
+    //
+    //   if (accountState is AsyncLoading) {
+    //     return null;
+    //   }
+    //
+    //   // if (accountState is AsyncError) {
+    //   //   return '/error';
+    //   // }
+    //
+    //   var isAuthenticated = accountState.value?.isAuthenticated;
+    //   if (isAuthenticated == null) {
+    //     return null;
+    //   }
+    //
+    //   if (state.uri.toString() == '/auth') {
+    //     return isAuthenticated ? '/home' : null;
+    //   }
+    //
+    //   return isAuthenticated ? null : '/auth';
+    // },
   );
 });

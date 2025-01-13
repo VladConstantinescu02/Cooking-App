@@ -19,7 +19,7 @@ class _MealsScreenState extends State<MealsScreen> {
         elevation: 0,
       ),
       body: ListView(
-        children: [
+        children: const [
           MealsTile(),
         ],
       ),
