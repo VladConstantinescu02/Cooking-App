@@ -6,9 +6,7 @@ import 'package:msa_cooking_app_client/features/profile/providers/profile_provid
 
 void main() {
   runApp(
-    const ProviderScope(
-      child: AppWithRouterProvider()
-    ),
+    const ProviderScope(child: AppWithRouterProvider()),
   );
 }
 
@@ -18,9 +16,7 @@ class AppWithRouterProvider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      routerConfig: router
-    );
+    return MaterialApp.router(routerConfig: router);
   }
 }
 
@@ -32,4 +28,3 @@ class MyApp extends StatelessWidget {
     return const HomeScreen();
   }
 }
-

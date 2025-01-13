@@ -22,7 +22,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
     ["1b", "Veggie", 300.0, 50.0, 'g'],
   ];
 
-
   void saveNewIngredient(BuildContext context, String selectedType) {
     setState(() {
       foodList.add([
@@ -39,7 +38,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
     Navigator.of(context).pop();
   }
 
-
   void cancelNewIngredient(BuildContext context) {
     setState(() {
       _controllerName.clear();
@@ -49,7 +47,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
     });
     Navigator.of(context).pop();
   }
-
 
   void addIngredient(BuildContext context) {
     showDialog(
@@ -82,12 +79,13 @@ class _FridgeScreenState extends State<FridgeScreen> {
     return Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Your Fridge'),
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          addIngredient(context); // Add ingredient button
+          addIngredient(context);
         },
         backgroundColor: Colors.black87,
         elevation: 0,

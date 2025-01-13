@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/authentication/providers/authentication_provider.dart';
 import 'package:msa_cooking_app_client/features/navigation/widgets/navigation.dart';
-import 'package:msa_cooking_app_client/features/profile/providers/profile_provider.dart';
 
 class Layout extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
@@ -13,23 +12,37 @@ class Layout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        backgroundColor: Colors.white,
+        title: Row(
           children: [
-            Icon(Icons.food_bank_outlined, size: 30,),
-            SizedBox(width: 5.0),
-            Text("Cooking App", style: TextStyle(fontWeight: FontWeight.bold))
+            Image.asset(
+              "images/logo.png",
+              fit: BoxFit.contain,
+              height: 30,
+            ),
           ],
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                  ref.read(authenticationProvider.notifier).signOut();
-              },
-              icon: const Icon(Icons.logout_outlined))
+            onPressed: () {
+              ref.read(authenticationProvider.notifier).signOut();
+            },
+            icon: const Icon(Icons.logout_outlined),
+            color: Colors.black,
+          ),
         ],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-        body: navigationShell,
-        bottomNavigationBar: Navigation(navigationShell: navigationShell),
+      backgroundColor: Colors.white,
+      body: Container(
+        color: Colors.white,
+        child: navigationShell,
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Navigation(navigationShell: navigationShell),
+      ),
     );
   }
 }
