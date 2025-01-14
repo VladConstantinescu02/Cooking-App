@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:msa_cooking_app_client/features/fridge/models/get_fridge_ingredient.dart';
+import 'package:msa_cooking_app_client/features/fridge/providers/fridge_provider.dart';
+import 'package:msa_cooking_app_client/features/fridge/widgets/fridge_ingredient.dart';
 import 'package:msa_cooking_app_client/features/fridge/widgets/fridge_tile.dart';
 import 'package:msa_cooking_app_client/features/fridge/widgets/ingredient_dialog_box.dart';
+import 'package:msa_cooking_app_client/shared/models/search_ingredient.dart';
 
-class FridgeScreen extends StatefulWidget {
+import '../../../shared/widgets/search_ingredients.dart';
+import '../widgets/add_fridge_ingredient_form.dart';
+
+class FridgeScreen extends ConsumerStatefulWidget {
   const FridgeScreen({super.key});
 
   @override
-  State<FridgeScreen> createState() => _FridgeScreenState();
+  ConsumerState<FridgeScreen> createState() => _FridgeScreenState();
 }
 
-class _FridgeScreenState extends State<FridgeScreen> {
+class _FridgeScreenState extends ConsumerState<FridgeScreen> {
   final _controllerName = TextEditingController();
   final _controllerCalorie = TextEditingController();
   final _controllerAmount = TextEditingController();
+
+  List<SearchIngredient> ingredients = [];
 
   // Default selected type
   String selectedType = 'g';
 
   List foodList = [
-    ["1a", "Fish", 200.0, 100.0, 'g'],
-    ["1b", "Veggie", 300.0, 50.0, 'g'],
+    GetFridgeIngredient("121212", "morcov", 234, 2, "pieces"),
+    GetFridgeIngredient("121213", "telina", 250, 400, "g")
   ];
 
   void saveNewIngredient(BuildContext context, String selectedType) {
@@ -67,7 +77,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
     );
   }
 
-  // Function to delete an ingredient
   void deleteIngredient(int ingredientIndex) {
     setState(() {
       foodList.removeAt(ingredientIndex);
@@ -76,41 +85,53 @@ class _FridgeScreenState extends State<FridgeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fridgeStateAsync = ref.watch(fridgeProvider);
+    final fridgeIngredients = fridgeStateAsync.value?.fridge?.fridgeIngredients;
+    ingredients = fridgeIngredients?.map((fi) => SearchIngredient(fi.ingredientId, fi.name)).toList() ?? [];
     return Scaffold(
-      backgroundColor: Colors.white70,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Your Fridge'),
-        elevation: 0,
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          addIngredient(context);
-        },
-        backgroundColor: Colors.black87,
-        elevation: 0,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text(
-          'Add Ingredient',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      body: Container(
+        color: Colors.white,
+        child: fridgeStateAsync.when(
+          data: (fridgeState) => ListView.builder(
+            itemCount: fridgeIngredients?.length,
+            itemBuilder: (context, index) {
+              return FridgeIngredient(
+                fridgeIngredient: fridgeIngredients![index],
+              );
+            },
           ),
+          error: (error, stack) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, color: Colors.red, size: 50),
+                const SizedBox(height: 16),
+                Text(
+                  'Failed to load fridge. Please try again.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),
-      body: ListView.builder(
-        itemCount: foodList.length,
-        itemBuilder: (context, index) {
-          return FridgeTile(
-            ingredientID: foodList[index][0],
-            ingredientName: foodList[index][1],
-            ingredientCalories: foodList[index][2],
-            ingredientQty: foodList[index][3],
-            ingredientQtySuffix: foodList[index][4],
-            deleteFridgeTile: (context) => deleteIngredient(index),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showModalBottomSheet(
+          context: context,
+          builder: (context) => SearchIngredients(
+              onIngredientSelected: (SearchIngredient s) {
+                showAdaptiveDialog(context: context, builder: (BuildContext context) {
+                  return AddFridgeIngredientForm(ingredientId: s.id, ingredientName: s.name);
+                });
+              }, ingredients)
           );
         },
+        child: const Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
 }

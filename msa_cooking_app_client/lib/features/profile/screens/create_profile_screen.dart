@@ -8,6 +8,7 @@ import 'package:msa_cooking_app_client/shared/errors/result.dart';
 import 'package:msa_cooking_app_client/shared/providers/profile_api_client_provider.dart';
 
 import '../../../shared/models/search_ingredient.dart';
+import '../../../shared/widgets/search_ingredients.dart';
 import '../../meals/providers/dietary_options_provider.dart';
 import '../models/create_profile.dart';
 import '../models/create_profile_response.dart';
@@ -139,12 +140,9 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
                       icon: const Icon(Icons.add_circle_outline),
                       iconSize: 40,
                       onPressed: () async {
-                        await showAdaptiveDialog(
-                          context: context,
-                          builder: (context) => AddIngredientsToAvoidDialog(
-                              _ingredientsToAvoid,
-                            onIngredientSelected: _onIngredientSelected,
-                          ),
+                        await showModalBottomSheet(
+                            context: context,
+                            builder: (context) => SearchIngredients(onIngredientSelected: _onIngredientSelected, _ingredientsToAvoid)
                         );
                       },
                     ),

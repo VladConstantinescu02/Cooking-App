@@ -13,23 +13,6 @@ class AddIngredientsToAvoidDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AlertDialog(
-      title: const Text("Add Ingredient to Avoid", style: TextStyle(fontSize: 18)),
-      content: SearchIngredients(onIngredientSelected: onIngredientSelected, _ingredientsSearched),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Cancel"),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Add"),
-        ),
-      ],
-    );
+    return SearchIngredients(onIngredientSelected: onIngredientSelected, _ingredientsSearched);
   }
 }
