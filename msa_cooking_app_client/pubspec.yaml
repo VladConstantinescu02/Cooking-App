@@ -50,6 +50,7 @@ dependencies:
   flutter_lints: ^4.0.0
 
   image_picker: ^1.1.2
+  lottie:
 
   flutter_slidable: any
 dev_dependencies:
@@ -81,6 +82,7 @@ flutter:
   assets:
     - images/meals_tile_background.png
     - images/logo.png
+    - images/stir_animation.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
