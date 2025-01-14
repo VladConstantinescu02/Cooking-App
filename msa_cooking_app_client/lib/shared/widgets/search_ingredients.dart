@@ -42,6 +42,8 @@ class _SearchIngredientsState extends ConsumerState<SearchIngredients> {
   void _onSearchChanged(String query) {
     setState(() {
       _query = query;
+      _ingredientsSearched = [];
+      _ingredients = [];
     });
 
     if (_debounce.isActive) _debounce.cancel();
@@ -85,63 +87,56 @@ class _SearchIngredientsState extends ConsumerState<SearchIngredients> {
     _ingredientsSearched = widget._ingredientsSearched
         .map((ingredient) => ingredient.copy())
         .toList();
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 0, right: 0, top: 16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: 'Search for ingredients...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              onChanged: _onSearchChanged,
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0, left: 15, right: 15),
+      child: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: 'Search for ingredients...',
+              prefixIcon: Icon(Icons.search),
             ),
-            const SizedBox(height: 16),
-            if (_isLoading)
-              const CircularProgressIndicator(),
-            if (!_isLoading && _ingredients.isEmpty && _query.isNotEmpty)
-              const Text(
-                'No ingredients found. Try a different query.',
-                style: TextStyle(color: Colors.red),
-              ),
-            Expanded(
-              child: ListView.separated(
-                itemCount: _ingredients.length,
-                itemBuilder: (context, index) {
-                  final ingredient = _ingredients[index];
-                  final isSelected = _ingredientsSearched.any((searchedIngredient) => searchedIngredient.id == ingredient.id);
+            onChanged: _onSearchChanged,
+          ),
+          const SizedBox(height: 5),
+          if (_isLoading)
+            const CircularProgressIndicator(),
+          if (!_isLoading && _ingredients.isEmpty && _query.isNotEmpty)
+            const Text(
+              'No ingredients found. Try a different query.',
+              style: TextStyle(color: Colors.red),
+            ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _ingredients.length,
+              itemBuilder: (context, index) {
+                final ingredient = _ingredients[index];
+                final isSelected = _ingredientsSearched.any((searchedIngredient) => searchedIngredient.id == ingredient.id);
 
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 1.0),
-                    title: Text(ingredient.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                    trailing: Icon(
-                      isSelected ? Icons.check_box : Icons.add_circle_outline,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          _ingredientsSearched.removeWhere((searchedIngredient) => searchedIngredient.id == ingredient.id);
-                        } else {
-                          if (!_ingredientsSearched.contains(ingredient)) {
-                            _ingredientsSearched.add(ingredient);
-                          }
+                return ListTile(
+                  title: Text(ingredient.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
+                  trailing: Icon(
+                    isSelected ? Icons.check_box : Icons.add_circle,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        _ingredientsSearched.removeWhere((searchedIngredient) => searchedIngredient.id == ingredient.id);
+                      } else {
+                        if (!_ingredientsSearched.contains(ingredient)) {
+                          _ingredientsSearched.add(ingredient);
                         }
-                      });
+                      }
+                    });
 
-                      widget.onIngredientSelected(ingredient);
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) => const Divider(),
-              ),
+                    widget.onIngredientSelected(ingredient);
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

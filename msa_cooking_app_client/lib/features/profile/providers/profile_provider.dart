@@ -26,12 +26,6 @@ class Profile extends _$Profile {
         }
     }
 
-    Widget getDialog() {
-        return AlertDialog(
-          title: const Text("Yes")
-        );
-    }
-
     Future<void> createProfile(CreateProfile profile, BuildContext context) async {
         state = const AsyncLoading();
         Result<CreateProfileResponse, Exception> result = await _profileApiClient.createProfile(profile);
