@@ -18,4 +18,9 @@ class SearchMeals {
   final List<String>? excludedProfileAlergens;
 
   SearchMeals(this.query, this.cuisineId, this.useProfileDiet, this.dietId, this.useAllFridgeIngredients, this.ingredients, this.mealTypeId, this.minCalories, this.maxCalories, this.includeProfileAlergens, this.excludedProfileAlergens);
+
+  factory SearchMeals.fromJson(Map<String, dynamic> json) =>
+      _$SearchMealsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SearchMealsToJson(this);
 }

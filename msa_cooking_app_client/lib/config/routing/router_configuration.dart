@@ -31,6 +31,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'Auth',
         builder: (context, state) => const AuthenticationScreen(),
       ),
+      GoRoute(
+        path: '/loading',
+        name: 'Loading',
+        builder: (context, state) => const LoadingScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return Layout(navigationShell: navigationShell);
@@ -47,7 +52,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: '/meals',
               name: 'Meals',
-              builder: (context, state) => const MealsScreen(),
+              builder: (context, state) => MealsScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -69,13 +74,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/error',
               name: 'Error',
               builder: (context, state) => const ErrorScreen(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: '/loading',
-              name: 'Loading',
-              builder: (context, state) => const LoadingScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [
