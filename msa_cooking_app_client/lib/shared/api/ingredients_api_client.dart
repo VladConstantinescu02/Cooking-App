@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:msa_cooking_app_client/features/profile/models/create_profile.dart';
 import 'package:msa_cooking_app_client/features/profile/models/create_profile_response.dart';
-import 'package:msa_cooking_app_client/features/profile/models/get_profile_response.dart';
-import 'package:msa_cooking_app_client/features/profile/models/profile.dart';
 import 'package:msa_cooking_app_client/shared/models/get_search_ingredients_response.dart';
 import 'package:msa_cooking_app_client/shared/models/search_ingredient.dart';
 

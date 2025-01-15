@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:msa_cooking_app_client/features/profile/models/profile.dart';
 
 part "create_profile_response.g.dart";
 

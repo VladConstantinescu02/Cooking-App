@@ -14,7 +14,9 @@ import 'package:msa_cooking_app_client/shared/screens/error_screen.dart';
 import 'package:msa_cooking_app_client/shared/screens/loading_screen.dart';
 import 'package:msa_cooking_app_client/shared/widgets/layout.dart';
 import 'package:msa_cooking_app_client/features/profile/models/profile.dart' as profile_model;
+
 import '../../features/authentication/models/user_account.dart';
+import '../../features/profile/screens/update_profile_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 

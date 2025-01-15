@@ -51,8 +51,10 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
 
   image_picker: ^1.1.2
+  lottie:
   flutter_widget_from_html: ^0.15.3
 
+  flutter_slidable: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,7 +70,6 @@ dev_dependencies:
   custom_lint: ^0.7.0
   riverpod_lint: ^2.6.2
   json_serializable: ^6.7.0
-  flutter_slidable: ^3.1.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -83,6 +84,7 @@ flutter:
   assets:
     - images/meals_tile_background.png
     - images/logo.png
+    - images/stir_animation.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -16,6 +16,6 @@ class SearchIngredient {
   Map<String, dynamic> toJson() => _$SearchIngredientToJson(this);
 
   SearchIngredient copy() {
-    return SearchIngredient(this.id, this.name);
+    return SearchIngredient(id, name);
   }
 }
