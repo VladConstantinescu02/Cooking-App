@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/meals/providers/meals_provider.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_all_meals_meal.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:msa_cooking_app_client/features/meals/widgets/get_meal.dart';
+import 'package:msa_cooking_app_client/features/meals/widgets/search_meal.dart';
 
 class MealsScreen extends ConsumerWidget {
   @override
@@ -13,11 +15,11 @@ class MealsScreen extends ConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(context: context, builder: (context) {
-            return Dialog.fullscreen(
-              child: Text("Hello!"),
-            );
-          });
+          showBottomSheet(
+              context: context,
+              builder: (context) => SearchMeal(),
+              enableDrag: false,
+          );
         },
         child: const Icon(Icons.add),
       ),
@@ -25,9 +27,14 @@ class MealsScreen extends ConsumerWidget {
         data: (mealsState) {
           if (mealsState.meals == null || mealsState.meals!.isEmpty) {
             return const Center(
-              child: Text(
-                'No meals available!',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.not_interested, size: 100,),
+                    Text('No meals', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                    Text('Use the button below to add some', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),)
+                  ]
               ),
             );
           }
@@ -53,13 +60,13 @@ class MealsScreen extends ConsumerWidget {
   }
 }
 
-class MealCard extends StatelessWidget {
+class MealCard extends ConsumerWidget {
   final GetAllMealsMeal meal;
 
   const MealCard({Key? key, required this.meal}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         AspectRatio(
@@ -75,7 +82,7 @@ class MealCard extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 },
                 errorBuilder: (context, error, stackTrace) => const Center(
-                  child: Icon(Icons.broken_image, size: 100, color: Colors.grey),
+                  child: Icon(Icons.broken_image, size: 100),
                 ),
               ),
             ],
@@ -84,7 +91,6 @@ class MealCard extends StatelessWidget {
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(12.0),
-            color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -104,10 +110,9 @@ class MealCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                         ),
-                      icon: const Icon(Icons.ads_click),
+                      icon: const Icon(Icons.double_arrow_sharp),
                       )
                     ),
                     Positioned(
@@ -116,7 +121,7 @@ class MealCard extends StatelessWidget {
                       child: PopupMenuButton<String>(
                         onSelected: (value) {
                           if (value == 'remove') {
-                            // Handle delete action
+                            ref.read(mealsProvider.notifier).deleteMeal(meal.id);
                           }
                         },
                         itemBuilder: (context) => [
@@ -135,7 +140,6 @@ class MealCard extends StatelessWidget {
                     meal.summary,
                     textStyle: const TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
                     ),
                     customStylesBuilder: (element) {
                       return {
@@ -144,31 +148,13 @@ class MealCard extends StatelessWidget {
                         'display': '-webkit-box',
                         '-webkit-line-clamp': '3',
                         '-webkit-box-orient': 'vertical',
-                        'color': 'black'
                       };
                     },
                     onTapUrl: (url) {
                       return true;
                     },
                   ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${meal.readyInMinutes} mins',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    meal.wasPrepared
-                        ? const Icon(Icons.check_circle, color: Colors.green)
-                        : const Icon(Icons.timer, color: Colors.orange),
-                  ],
-                ),
+                )
               ],
             ),
           ),

@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.0.0
   flutter_lints: ^4.0.0
   flutter_html: ^3.0.0-beta.2
+  im_stepper: ^1.0.1+1
 
   image_picker: ^1.1.2
   lottie:
@@ -85,6 +86,8 @@ flutter:
     - images/meals_tile_background.png
     - images/logo.png
     - images/stir_animation.json
+    - images/logo_white.png
+    - images/stir_animation_white.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

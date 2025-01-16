@@ -15,7 +15,13 @@ class AppWithRouterProvider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    return MaterialApp.router(routerConfig: router);
+    return MaterialApp.router(
+        routerConfig: router,
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData.dark(),
+    );
   }
 }
 

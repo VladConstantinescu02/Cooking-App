@@ -12,11 +12,10 @@ class Layout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Row(
           children: [
             Image.asset(
-              "images/logo.png",
+              "images/logo_white.png",
               fit: BoxFit.contain,
               height: 30,
             ),
@@ -28,19 +27,14 @@ class Layout extends ConsumerWidget {
               ref.read(authenticationProvider.notifier).signOut();
             },
             icon: const Icon(Icons.logout_outlined),
-            color: Colors.black,
           ),
         ],
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      backgroundColor: Colors.white,
       body: Container(
-        color: Colors.white,
         child: navigationShell,
       ),
       bottomNavigationBar: Container(
-        color: Colors.white,
         child: Navigation(navigationShell: navigationShell),
       ),
     );

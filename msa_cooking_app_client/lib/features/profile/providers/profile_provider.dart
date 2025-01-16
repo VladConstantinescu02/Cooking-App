@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:msa_cooking_app_client/features/profile/models/create_profile.dart';
 import 'package:msa_cooking_app_client/features/profile/models/delete_profile_response.dart';
 import 'package:msa_cooking_app_client/shared/api/profiles_api_client.dart';
@@ -44,12 +45,12 @@ class Profile extends _$Profile {
         }
     }
 
-    Future<void> updateProfile(CreateProfile profile) async {
+    Future<void> updateProfile(CreateProfile profile, BuildContext context) async {
         state = const AsyncLoading();
         Result<CreateProfileResponse, Exception> result = await _profileApiClient.updateProfile(profile);
         if (result is Success<CreateProfileResponse, Exception>) {
             ref.invalidateSelf();
-            await future;
+            context.go('/profile');
         }
     }
 

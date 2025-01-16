@@ -32,6 +32,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/auth',
         name: 'Auth',
         builder: (context, state) => const AuthenticationScreen(),
+        redirect: (context, state) {
+          if (state.uri.toString() == '/auth') {
+            final accountState = account;
+            var isAuthenticated = accountState.value?.isAuthenticated;
+            return isAuthenticated ?? false ? '/home' : null;
+          }
+        }
       ),
       GoRoute(
         path: '/loading',
@@ -120,10 +127,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (isAuthenticated && !profileExists) {
         return '/create-profile';
-      }
-
-      if (state.uri.toString() == '/auth') {
-        return isAuthenticated ? '/home' : null;
       }
 
       return null;

@@ -9,8 +9,12 @@ class AuthenticationButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: Image.asset('images/logo_white.png'),
+        ),
         Center(
-          child: OutlinedButton(
+          child: ElevatedButton(
             onPressed: () async {
               await ref.read(authenticationProvider.notifier).signInWithGoogle();
             },

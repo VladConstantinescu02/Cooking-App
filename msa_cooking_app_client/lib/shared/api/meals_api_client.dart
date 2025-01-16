@@ -2,9 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
+import 'package:msa_cooking_app_client/features/meals/models/delete_meal_result.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_all_dietary_options_response.dart';
+import 'package:msa_cooking_app_client/features/meals/models/get_all_meal_cuisines_result.dart';
+import 'package:msa_cooking_app_client/features/meals/models/get_all_meal_types_result.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_all_meals_result.dart';
 import 'package:msa_cooking_app_client/features/meals/models/get_meal_result.dart';
+import 'package:msa_cooking_app_client/features/meals/models/save_meal_result.dart';
 import 'package:msa_cooking_app_client/features/meals/models/search_meals.dart';
 import 'package:msa_cooking_app_client/features/meals/models/search_meals_result.dart';
 
@@ -91,6 +95,82 @@ class MealsApiClient {
     } on Exception catch (e) {
       log("Error when retrieving meal $e");
       return Failure(Exception("Error when retrieving meal"));
+    }
+  }
+
+  Future<Result<SaveMealResult, Exception>> saveMeal(String mealId) async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    try {
+      final response = await client.post(Uri.http(_baseAddress, "api/meals", {'spoonacularMealId': mealId}), headers: headers);
+      if (response.statusCode == 200) {
+        return Success(SaveMealResult.fromJson(jsonDecode(response.body)));
+      } else {
+        return Failure(Exception("No meal"));
+      }
+    } on Exception catch (e) {
+      log("Error when saving meal $e");
+      return Failure(Exception("Error when saving meal"));
+    }
+  }
+
+  Future<Result<DeleteMealResult, Exception>> deleteMeal(String mealId) async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    try {
+      final response = await client.delete(Uri.http(_baseAddress, "api/meals", {'mealId': mealId}), headers: headers);
+      if (response.statusCode == 200) {
+        return Success(DeleteMealResult.fromJson(jsonDecode(response.body)));
+      } else {
+        return Failure(Exception("No meal"));
+      }
+    } on Exception catch (e) {
+      log("Error when deleting meal $e");
+      return Failure(Exception("Error when deleting meal"));
+    }
+  }
+
+  Future<Result<GetAllMealCuisinesResult, Exception>> getAllMealCuisines() async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    try {
+      final response = await client.get(Uri.http(_baseAddress, "api/meals/meal-cuisines"), headers: headers);
+      if (response.statusCode == 200) {
+        return Success(GetAllMealCuisinesResult.fromJson(jsonDecode(response.body)));
+      } else {
+        return Failure(Exception("No meal cuisines"));
+      }
+    } on Exception catch (e) {
+      log("Error when retrieving meal cuisines $e");
+      return Failure(Exception("Error when retrieving meal cuisines"));
+    }
+  }
+
+  Future<Result<GetAllMealTypesResult, Exception>> getAllMealTypes() async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    try {
+      final response = await client.get(Uri.http(_baseAddress, "api/meals/meal-types"), headers: headers);
+      if (response.statusCode == 200) {
+        return Success(GetAllMealTypesResult.fromJson(jsonDecode(response.body)));
+      } else {
+        return Failure(Exception("No meal types"));
+      }
+    } on Exception catch (e) {
+      log("Error when retrieving meal types $e");
+      return Failure(Exception("Error when retrieving meal types"));
     }
   }
 }

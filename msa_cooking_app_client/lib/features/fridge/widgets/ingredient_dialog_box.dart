@@ -29,7 +29,6 @@ class _IngredientDialogBoxState extends State<IngredientDialogBox> {
   String? doubleErrorCalorie;
   String? doubleErrorAmount;
 
-
   // Custom InputDecoration for consistent style
   InputDecoration customInputDecoration(String hintText, [String? errorText]) {
     return InputDecoration(
@@ -53,7 +52,7 @@ class _IngredientDialogBoxState extends State<IngredientDialogBox> {
 
   void validateDoubleInputAmount(String value) {
     setState(() {
-      doubleErrorAmount = double.tryParse(value)== null ? "Provide amount" : null;
+      doubleErrorAmount = double.tryParse(value) == null ? "Provide amount" : null;
     });
   }
 
@@ -66,87 +65,78 @@ class _IngredientDialogBoxState extends State<IngredientDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
-      content: SizedBox(
-        height: 400,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      content: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TextField(
+          controller: widget.controllerName,
+          decoration: customInputDecoration("Add new ingredient"),
+          style: const TextStyle(color: Colors.black87),
+        ),
+        TextField(
+          controller: widget.controllerCalorie,
+          decoration: customInputDecoration("Add calories amount", doubleErrorCalorie),
+          style: const TextStyle(color: Colors.black87),
+          keyboardType: TextInputType.number,
+          onChanged: validateDoubleInputCalorie,
+        ),
+        // Amount and unit input fields
+        Row(
           children: [
-            // Name input field
-            TextField(
-              controller: widget.controllerName,
-              decoration: customInputDecoration("Add new ingredient"),
-              style: const TextStyle(color: Colors.black87),
+            Expanded(
+              flex: 2,
+              child: TextField(
+                controller: widget.controllerAmount,
+                decoration: customInputDecoration("Add weight", doubleErrorAmount),
+                style: const TextStyle(color: Colors.black87),
+                keyboardType: TextInputType.number,
+                onChanged: validateDoubleInputAmount,
+              ),
             ),
-
-
-            TextField(
-              controller: widget.controllerCalorie,
-              decoration: customInputDecoration("Add calories amount", doubleErrorCalorie),
-              style: const TextStyle(color: Colors.black87),
-              keyboardType: TextInputType.number,
-              onChanged: validateDoubleInputCalorie,
-            ),
-
-
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: TextField(
-                    controller: widget.controllerAmount,
-                    decoration: customInputDecoration("Add weight", doubleErrorAmount),
-                    style: const TextStyle(color: Colors.black87),
-                    keyboardType: TextInputType.number,
-                    onChanged: validateDoubleInputAmount,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 1,
-                  child: DropdownButtonFormField<String>(
-                    value: selectedType,
-                    items: quantityTypes.map((String type) {
-                      return DropdownMenuItem<String>(
-                        value: type,
-                        child: Text(
-                          type,
-                          style: const TextStyle(color: Colors.black87),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedType = newValue!;
-                      });
-                    },
-                    decoration: customInputDecoration("Unit"),
-                  ),
-                ),
-              ],
-            ),
-
-            // Save and Cancel buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MyButton(
-                  contentText: 'Save',
-                  onPressed: () {
-                    if (doubleErrorCalorie == null) {
-                      widget.onSave(selectedType);
-                    }
-                  },
-                ),
-                MyButton(
-                  contentText: 'Cancel',
-                  onPressed: widget.onCancel,
-                ),
-              ],
+            const SizedBox(width: 8),
+            Expanded(
+              flex: 1,
+              child: DropdownButtonFormField<String>(
+                value: selectedType,
+                items: quantityTypes.map((String type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(
+                      type,
+                      style: const TextStyle(color: Colors.black87),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedType = newValue!;
+                  });
+                },
+                decoration: customInputDecoration("Unit"),
+              ),
             ),
           ],
         ),
-      ),
+        // Save and Cancel buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            MyButton(
+              contentText: 'Save',
+              onPressed: () {
+                if (doubleErrorCalorie == null) {
+                  widget.onSave(selectedType);
+                }
+              },
+            ),
+            MyButton(
+              contentText: 'Cancel',
+              onPressed: widget.onCancel,
+            ),
+          ],
+        ),
+      ],
+    ),
     );
   }
 }

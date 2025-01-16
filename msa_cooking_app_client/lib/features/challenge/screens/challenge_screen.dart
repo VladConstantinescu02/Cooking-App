@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/challenge_card.dart';
 import 'package:lottie/lottie.dart';
 
@@ -8,14 +9,12 @@ class ChallengeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: const Text(
           'Lets get cooking!',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 40,
+            fontSize: 35,
           ),
         ),
         elevation: 0,
@@ -25,9 +24,9 @@ class ChallengeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Lottie.asset(
-              'images/stir_animation.json',
-              width: 300,
-              height: 300,
+              'images/stir_animation_white.json',
+              width: 250,
+              height: 250,
             ),
           ),
 
@@ -37,7 +36,7 @@ class ChallengeScreen extends StatelessWidget {
               children: <Widget>[
                 ChallengeCard(
                   onTap: () {
-                    debugPrint('Go to page');
+                    GoRouter.of(context).go('/fridge');
                   },
                   icon: const Icon(Icons.set_meal_rounded, color: Colors.white, size: 40),
                   text: 'Lets build your fridge',
@@ -47,7 +46,7 @@ class ChallengeScreen extends StatelessWidget {
                 ),
                 ChallengeCard(
                   onTap: () {
-                    debugPrint('Go to page');
+                    GoRouter.of(context).go('/meals');
                   },
                   icon: const Icon(Icons.fastfood, color: Colors.black, size: 40),
                   text: 'Create your meals',
@@ -57,7 +56,7 @@ class ChallengeScreen extends StatelessWidget {
                 ),
                 ChallengeCard(
                   onTap: () {
-                    debugPrint('Go to page');
+                    GoRouter.of(context).go('/profile');
                   },
                   icon: const Icon(Icons.account_circle, color: Colors.white, size: 40),
                   text: 'Set up your profile',

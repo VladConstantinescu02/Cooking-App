@@ -16,7 +16,6 @@ class MealDetailsWidget extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meal Details'),
-        backgroundColor: Colors.deepOrange,
       ),
       body: getMealAsyncState.when(
         data: (mealResult) => mealResult == null
@@ -73,7 +72,6 @@ class MealDetailsContent extends StatelessWidget {
                 'Ready in ${mealData.readyInMinutes} minutes',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
                 ),
               ),
             ),
@@ -147,7 +145,6 @@ class MealDetailsContent extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontStyle: FontStyle.italic,
-                                  color: Colors.grey,
                                 ),
                               ),
                             ),
