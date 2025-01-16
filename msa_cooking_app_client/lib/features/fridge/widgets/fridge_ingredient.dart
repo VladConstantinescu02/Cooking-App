@@ -44,16 +44,13 @@ class FridgeIngredient extends ConsumerWidget {
         return confirm ?? false; // Dismiss only if the user confirmed
       },
       background: Container(
-        color: Colors.red,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: const Icon(
           Icons.delete_outline,
-          color: Colors.white,
         ),
       ),
       child: Card(
-        color: Theme.of(context).primaryColorLight,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -65,13 +62,11 @@ class FridgeIngredient extends ConsumerWidget {
             children: [
               CircleAvatar(
                 radius: 28,
-                backgroundColor: Colors.redAccent,
                 child: Text(
                   fridgeIngredient.name[0].toUpperCase(),
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red[900],
                   ),
                 ),
               ),
@@ -85,7 +80,6 @@ class FridgeIngredient extends ConsumerWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -93,7 +87,6 @@ class FridgeIngredient extends ConsumerWidget {
                       '${fridgeIngredient.caloriesPer100Grams.toStringAsFixed(1)} cal/100g',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -101,7 +94,6 @@ class FridgeIngredient extends ConsumerWidget {
                       '${fridgeIngredient.quantity} ${fridgeIngredient.ingredientMeasuringUnitSuffix}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
                       ),
                     ),
                   ],

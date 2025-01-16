@@ -14,7 +14,9 @@ import 'package:msa_cooking_app_client/shared/screens/error_screen.dart';
 import 'package:msa_cooking_app_client/shared/screens/loading_screen.dart';
 import 'package:msa_cooking_app_client/shared/widgets/layout.dart';
 import 'package:msa_cooking_app_client/features/profile/models/profile.dart' as profile_model;
+
 import '../../features/authentication/models/user_account.dart';
+import '../../features/profile/screens/update_profile_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -30,6 +32,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/auth',
         name: 'Auth',
         builder: (context, state) => const AuthenticationScreen(),
+        redirect: (context, state) {
+          if (state.uri.toString() == '/auth') {
+            final accountState = account;
+            var isAuthenticated = accountState.value?.isAuthenticated;
+            return isAuthenticated ?? false ? '/home' : null;
+          }
+        }
+      ),
+      GoRoute(
+        path: '/loading',
+        name: 'Loading',
+        builder: (context, state) => const LoadingScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -47,7 +61,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: '/meals',
               name: 'Meals',
-              builder: (context, state) => const MealsScreen(),
+              builder: (context, state) => MealsScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -69,13 +83,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/error',
               name: 'Error',
               builder: (context, state) => const ErrorScreen(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: '/loading',
-              name: 'Loading',
-              builder: (context, state) => const LoadingScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -120,10 +127,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (isAuthenticated && !profileExists) {
         return '/create-profile';
-      }
-
-      if (state.uri.toString() == '/auth') {
-        return isAuthenticated ? '/home' : null;
       }
 
       return null;

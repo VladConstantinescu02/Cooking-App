@@ -90,10 +90,10 @@ class _FridgeScreenState extends ConsumerState<FridgeScreen> {
     ingredients = fridgeIngredients?.map((fi) => SearchIngredient(fi.ingredientId, fi.name)).toList() ?? [];
     return Scaffold(
       body: Container(
-        color: Colors.white,
-        child: fridgeStateAsync.when(
+        child: fridgeIngredients != null && fridgeIngredients.isNotEmpty ?
+        fridgeStateAsync.when(
           data: (fridgeState) => ListView.builder(
-            itemCount: fridgeIngredients?.length,
+            itemCount: fridgeIngredients.length,
             itemBuilder: (context, index) {
               return FridgeIngredient(
                 fridgeIngredient: fridgeIngredients![index],
@@ -104,7 +104,7 @@ class _FridgeScreenState extends ConsumerState<FridgeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error, color: Colors.red, size: 50),
+                const Icon(Icons.error, size: 50),
                 const SizedBox(height: 16),
                 Text(
                   'Failed to load fridge. Please try again.',
@@ -114,7 +114,18 @@ class _FridgeScreenState extends ConsumerState<FridgeScreen> {
             ),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-        ),
+        ) :
+            const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.not_interested, size: 100,),
+                  Text('No fridge ingredients', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                  Text('Use the button below to add some', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),)
+                ]
+              ),
+            )
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
